@@ -1,0 +1,62 @@
+import styled from '@emotion/styled';
+
+const StyledRangeBar = styled('div')`
+  flex: 1;
+  margin-right: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  height: 50px;
+  position: relative;
+`;
+
+type StyledRangeValueProps = {
+  value: number;
+};
+
+const StyledRangeValue = styled('div')<StyledRangeValueProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  color: white;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  pointer-events: none;
+  transform: ${(prop) => {
+    const input = document.getElementById('range');
+    const inputWidth = input?.getBoundingClientRect().width || 0;
+    const offset = ((inputWidth - 50) / (20 - 5)) * (prop.value - 5);
+    return `translateX(${offset}px)`;
+  }};
+`;
+
+const StyledRangeInput = styled('input')`
+  width: 100%;
+  flex: 1;
+  cursor: pointer;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  background: #707070;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 50px;
+    height: 50px;
+    background: #151111;
+    color: white;
+    border-radius: 100%;
+    cursor: pointer;
+    position: relative;
+  }
+`;
+
+export { StyledRangeBar, StyledRangeValue, StyledRangeInput };
