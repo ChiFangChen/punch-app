@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-import Link from '@/components/Link';
+import { Link } from '@/components';
 import { StyledNav, StyledNavLeft, StyledNavRight } from './styles';
 
 const Header = () => {
