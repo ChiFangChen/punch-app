@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { StyledHeader, StyledNav } from './styles';
+import { useLocation } from 'react-router-dom';
+import Link from '@/components/Link';
+import { StyledNav, StyledNavLeft, StyledNavRight } from './styles';
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -9,13 +10,13 @@ const Header = () => {
     const isHome = ['/', '/home'].includes(pathname);
     return (
       <StyledNav>
-        <div>{isHome ? null : <Link to="/home">HOME</Link>}</div>
-        <div>{isHome ? <Link to="/settings">Settings</Link> : null}</div>
+        <StyledNavLeft>{isHome ? null : <Link to="/home">HOME</Link>}</StyledNavLeft>
+        <StyledNavRight>{isHome ? <Link to="/settings">Settings</Link> : null}</StyledNavRight>
       </StyledNav>
     );
   }, [pathname]);
 
-  return <StyledHeader>{nav}</StyledHeader>;
+  return <header>{nav}</header>;
 };
 
 export default Header;
