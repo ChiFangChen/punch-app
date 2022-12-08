@@ -1,12 +1,7 @@
-import { Link } from 'react-router-dom';
+import { StyledNoMatch } from './styles';
 
 function NoMatch() {
-  return (
-    <div>
-      No Match Page
-      <Link to="/home">Go Home</Link>
-    </div>
-  );
+  return <StyledNoMatch>No Match Page</StyledNoMatch>;
 }
 
 export default NoMatch;
