@@ -1,17 +1,26 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
-import { Title, Label, TextInput, RangeBar } from '@/components';
+import { Title, Label, TextInput } from '@/components';
 import {
   StyledSettings,
   StyledSettingBlock,
   StyledSettingBlockTitle,
   StyledSettingItem,
 } from './styles';
+import RangeBarContainer from './RangeBarContainer';
+import { RangeBarContainerProps } from './RangeBarContainer/RangeBarContainer';
 
 function Settings() {
-  const [range, setRange] = useState(5);
+  const rangeRef = useRef(5);
   const latitudeRef = useRef<HTMLInputElement>(null);
   const longitudeRef = useRef<HTMLInputElement>(null);
+
+  const onRangeChange: RangeBarContainerProps['onChange'] = useCallback(
+    (data) => {
+      rangeRef.current = data;
+    },
+    [rangeRef]
+  );
 
   return (
     <StyledSettings>
@@ -36,12 +45,7 @@ function Settings() {
               >
                 5KM
               </span>
-              <RangeBar
-                onChange={(e) => {
-                  setRange(Number(e.currentTarget.value));
-                }}
-                value={range}
-              />
+              <RangeBarContainer onChange={onRangeChange} />
               <span
                 css={css`
                   color: #8cbaef;
@@ -87,7 +91,7 @@ function Settings() {
             cursor: pointer;
           `}
           onClick={() => {
-            console.log(range, latitudeRef.current?.value, longitudeRef.current?.value);
+            console.log(rangeRef.current, latitudeRef.current?.value, longitudeRef.current?.value);
           }}
         >
           SAVE
