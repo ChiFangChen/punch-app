@@ -1,6 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
-import { RANGE, COORDINATE, MIN_RANGE } from '@/utils/constants';
+import {
+  RANGE,
+  COORDINATE,
+  MIN_RANGE,
+  DEFAULT_LATITUDE,
+  DEFAULT_LONGITUDE,
+} from '@/utils/constants';
 import { State } from '@/model';
 
 interface Config {
@@ -13,8 +19,8 @@ const initialState: State<Config> = {
   isReady: false,
   data: {
     range: MIN_RANGE,
-    latitude: 23,
-    longitude: 123,
+    latitude: DEFAULT_LATITUDE,
+    longitude: DEFAULT_LONGITUDE,
   },
 };
 
@@ -43,7 +49,10 @@ const SAVE_RANGE = 'SAVE_RANGE';
 // action creators
 const getConfigAsync = createAsyncThunk<Config>(GET_RANGE, async () => {
   const range = getLocalStorage(RANGE) || MIN_RANGE;
-  const [latitude, longitude] = getLocalStorage(COORDINATE) || [23, 123];
+  const [latitude, longitude] = getLocalStorage(COORDINATE) || [
+    DEFAULT_LATITUDE,
+    DEFAULT_LONGITUDE,
+  ];
   return { range, latitude, longitude };
 });
 
