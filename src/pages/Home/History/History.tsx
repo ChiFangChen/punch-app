@@ -1,24 +1,24 @@
-import { StyledHistory, StyledHistoryItem } from './styles';
+import RecordItem from './RecordItem';
+import { StyledHistory } from './styles';
+interface Record {
+  timestamp: number;
+  action: 'clock in' | 'clock out';
+  address: string;
+}
 
 function History() {
+  const history: Record[] = [{ timestamp: 1670562432530, action: 'clock in', address: '新北市' }];
+
   return (
     <StyledHistory>
       <h3>Recent clocking history</h3>
 
       <div>
-        <StyledHistoryItem>
-          <div>
-            01/11 @ 07:10 A.M <span>Clock in</span>
-          </div>
-          <div>新北市.......</div>
-        </StyledHistoryItem>
-
-        <StyledHistoryItem>
-          <div>
-            01/11 @ 07:10 P.M <span>Clock Out</span>
-          </div>
-          <div>新北市.......</div>
-        </StyledHistoryItem>
+        {history.map(({ timestamp, action, address }) => {
+          return (
+            <RecordItem key={timestamp} timestamp={timestamp} action={action} address={address} />
+          );
+        })}
       </div>
     </StyledHistory>
   );
