@@ -3,11 +3,12 @@ import { StyledRangeBar, StyledRangeValue, StyledRangeInput } from './styles';
 type RangeBarProps = {
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
   value: number;
+  isReady: boolean;
 };
 
-const RangeBar = ({ onChange, value }: RangeBarProps) => (
+const RangeBar = ({ onChange, value, isReady }: RangeBarProps) => (
   <StyledRangeBar>
-    <StyledRangeValue value={value}>{value}</StyledRangeValue>
+    {isReady && <StyledRangeValue value={value}>{value}</StyledRangeValue>}
     <StyledRangeInput
       type="range"
       id="range"
@@ -16,6 +17,7 @@ const RangeBar = ({ onChange, value }: RangeBarProps) => (
       max="20"
       value={value}
       onChange={onChange}
+      isReady={isReady}
     />
   </StyledRangeBar>
 );

@@ -11,7 +11,12 @@ import RangeBarContainer from './RangeBarContainer';
 import { RangeBarContainerProps } from './RangeBarContainer/RangeBarContainer';
 
 function Settings() {
-  const rangeRef = useRef(5);
+  const defaultValues = {
+    range: 10,
+    latitude: 23,
+    longitude: 123,
+  };
+  const rangeRef = useRef(defaultValues.range);
   const latitudeRef = useRef<HTMLInputElement>(null);
   const longitudeRef = useRef<HTMLInputElement>(null);
 
@@ -21,6 +26,37 @@ function Settings() {
     },
     [rangeRef]
   );
+
+  const onSave = () => {
+    const res = {
+      range: rangeRef.current,
+      latitude: Number(latitudeRef.current?.value),
+      longitude: Number(longitudeRef.current?.value),
+    };
+
+    if (5 > res.range || res.range > 20) {
+      alert('range should be between 5 and 20');
+      return;
+    }
+
+    if (Number.isNaN(res.latitude)) {
+      alert('latitude should be number');
+      return;
+    } else if (-90 > res.latitude || res.latitude > 90) {
+      alert('latitude should be between -90 and 90');
+      return;
+    }
+
+    if (Number.isNaN(res.longitude)) {
+      alert('longitude should be number');
+      return;
+    } else if (-180 > res.longitude || res.longitude > 180) {
+      alert('longitude should be between -180 and 180');
+      return;
+    }
+
+    console.log(res);
+  };
 
   return (
     <StyledSettings>
@@ -45,7 +81,7 @@ function Settings() {
               >
                 5KM
               </span>
-              <RangeBarContainer onChange={onRangeChange} />
+              <RangeBarContainer onChange={onRangeChange} defaultValue={defaultValues.range} />
               <span
                 css={css`
                   color: #8cbaef;
@@ -63,12 +99,24 @@ function Settings() {
 
           <StyledSettingItem>
             <Label htmlFor="latitude">Latitude</Label>
-            <TextInput type="text" id="latitude" name="latitude" ref={latitudeRef} />
+            <TextInput
+              type="text"
+              id="latitude"
+              name="latitude"
+              ref={latitudeRef}
+              defaultValue={defaultValues.latitude}
+            />
           </StyledSettingItem>
 
           <StyledSettingItem>
             <Label htmlFor="longitude">Longitude</Label>
-            <TextInput type="text" id="longitude" name="longitude" ref={longitudeRef} />
+            <TextInput
+              type="text"
+              id="longitude"
+              name="longitude"
+              ref={longitudeRef}
+              defaultValue={defaultValues.longitude}
+            />
           </StyledSettingItem>
         </StyledSettingBlock>
       </div>
@@ -90,9 +138,7 @@ function Settings() {
             font-weight: bold;
             cursor: pointer;
           `}
-          onClick={() => {
-            console.log(rangeRef.current, latitudeRef.current?.value, longitudeRef.current?.value);
-          }}
+          onClick={onSave}
         >
           SAVE
         </button>

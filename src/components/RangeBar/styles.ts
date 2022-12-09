@@ -32,11 +32,14 @@ const StyledRangeValue = styled('div')<StyledRangeValueProps>`
   }};
 `;
 
-const StyledRangeInput = styled('input')`
+type StyledRangeInputProps = {
+  isReady: boolean;
+};
+
+const StyledRangeInput = styled('input')<StyledRangeInputProps>`
   width: 100%;
   flex: 1;
   cursor: pointer;
-  margin: 0;
   -webkit-appearance: none;
   appearance: none;
   height: 3px;
@@ -51,8 +54,7 @@ const StyledRangeInput = styled('input')`
     appearance: none;
     width: 50px;
     height: 50px;
-    background: #151111;
-    color: white;
+    background: ${({ isReady }) => (isReady ? '#151111' : 'transparent')};
     border-radius: 100%;
     cursor: pointer;
     position: relative;
