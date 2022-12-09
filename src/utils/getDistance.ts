@@ -27,6 +27,8 @@ export function getDistance(
     if (unit === 'N') {
       dist = dist * 0.8684;
     }
-    return dist;
+
+    // get the int
+    return Math.ceil(dist);
   }
 }

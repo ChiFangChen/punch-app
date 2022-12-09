@@ -1,31 +1,11 @@
 import { css } from '@emotion/react';
-import { useAppDispatch, actions } from '@/model';
 import { getTimeDetail } from '@/utils/time';
 
-import { StyledClockBlock, StyledClock, StyledClockButton } from './styles';
-
-enum ClockButton {
-  'disabled' = 'Out of range',
-  'enabled' = 'Clock ',
-  'far' = 'Out of range',
-}
+import { StyledClockBlock, StyledClock } from './styles';
+import ClockButton from './ClockButton';
 
 function ClockBlock() {
-  const dispatch = useAppDispatch();
-  const buttonStatus = 'in';
-  const text = ClockButton.enabled + buttonStatus;
-
   const { displayTime, displayStatus } = getTimeDetail();
-
-  const onPunch = () => {
-    dispatch(
-      actions.appendHistoryAsync({
-        action: `clock ${buttonStatus}`,
-        address: '新北市...',
-        timestamp: Date.now(),
-      })
-    );
-  };
 
   return (
     <StyledClockBlock>
@@ -53,9 +33,7 @@ function ClockBlock() {
         </div>
       </StyledClock>
 
-      <StyledClockButton buttonStatus={buttonStatus} onClick={onPunch}>
-        {text}
-      </StyledClockButton>
+      <ClockButton />
     </StyledClockBlock>
   );
 }

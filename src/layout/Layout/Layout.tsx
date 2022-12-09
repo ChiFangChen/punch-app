@@ -9,7 +9,7 @@ const Layout = () => {
   const isReady = useAppSelector((state) => state.config.isReady);
 
   useEffect(() => {
-    dispatch(actions.getConfigAsync());
+    dispatch(actions.getAppConfigAsync());
     dispatch(actions.getHistoryAsync());
   }, [dispatch]);
 

@@ -14,8 +14,8 @@ import { RangeBarContainerProps } from './RangeBarContainer/RangeBarContainer';
 
 function Settings() {
   const dispatch = useAppDispatch();
-  const config = useAppSelector((state) => state.config.data);
-  const rangeRef = useRef(config.range);
+  const { range, latitude, longitude } = useAppSelector((state) => state.config.data.app);
+  const rangeRef = useRef(range);
   const latitudeRef = useRef<HTMLInputElement>(null);
   const longitudeRef = useRef<HTMLInputElement>(null);
 
@@ -54,7 +54,7 @@ function Settings() {
       return;
     }
 
-    dispatch(actions.saveConfigAsync(res));
+    dispatch(actions.saveAppConfigAsync(res));
   };
 
   return (
@@ -80,7 +80,7 @@ function Settings() {
               >
                 {MIN_RANGE}KM
               </span>
-              <RangeBarContainer onChange={onRangeChange} defaultValue={config.range} />
+              <RangeBarContainer onChange={onRangeChange} defaultValue={range} />
               <span
                 css={css`
                   color: #8cbaef;
@@ -103,7 +103,7 @@ function Settings() {
               id="latitude"
               name="latitude"
               ref={latitudeRef}
-              defaultValue={config.latitude}
+              defaultValue={latitude}
             />
           </StyledSettingItem>
 
@@ -114,7 +114,7 @@ function Settings() {
               id="longitude"
               name="longitude"
               ref={longitudeRef}
-              defaultValue={config.longitude}
+              defaultValue={longitude}
             />
           </StyledSettingItem>
         </StyledSettingBlock>

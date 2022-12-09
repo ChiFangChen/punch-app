@@ -1,39 +1,46 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { css } from '@emotion/react';
-import { useAppSelector } from '@/model';
-import { getDistance } from '@/utils/getDistance';
+import { useAppSelector, useAppDispatch, actions } from '@/model';
 
 import { StyledLocation, StyledLocationContent } from './styles';
 
 enum LocationText {
-  'disabled' = 'You Arrived',
+  'disabled' = 'Please enable GPS',
   'enabled' = 'You Arrived',
   'far' = 'You are {{distance}} km away from office.',
 }
 
 function Location() {
-  const [currentPosition, setCurrentPosition] = useState<[number, number] | null>(null);
-  const {
-    data: { latitude, longitude },
-  } = useAppSelector((state) => state.config);
-  const [currentLatitude, currentLongitude] = currentPosition || [null, null];
-  const distance = useMemo(
-    () =>
-      currentLatitude && currentLongitude
-        ? Math.ceil(getDistance(latitude, longitude, currentLatitude, currentLongitude))
-        : undefined,
-    [latitude, longitude, currentLatitude, currentLongitude]
+  const dispatch = useAppDispatch();
+  const { gps, coordinates, distance, inDistance } = useAppSelector(
+    (state) => state.config.data.user
   );
-  const text = LocationText.far.replace('{{distance}}', `${distance}`);
+  const [currentLatitude, currentLongitude] = coordinates || [null, null];
+  const text = useMemo(() => {
+    if (!gps) return LocationText.disabled;
+    if (inDistance) return LocationText.enabled;
+    return LocationText.far.replace('{{distance}}', `${distance}`);
+  }, [gps, distance, inDistance]);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
       const successHandler =
-        (type: string) => (position: { coords: { latitude: number; longitude: number } }) => {
-          setCurrentPosition([position.coords.latitude, position.coords.longitude]);
+        (type: string) =>
+        ({
+          coords: { latitude, longitude },
+        }: {
+          coords: { latitude: number; longitude: number };
+        }) => {
+          dispatch(
+            actions.updateUser({
+              coordinates: [latitude, longitude],
+              gps: true,
+            })
+          );
         };
 
       const errorHandler = (type: string) => (err: any) => {
+        dispatch(actions.updateUser({ gps: false }));
         console.log(type, err);
         // 1	PERMISSION_DENIED	沒有獲取裝置定位的權限
         // 2	POSITION_UNAVAILABLE	位置資訊獲取錯誤
@@ -53,11 +60,11 @@ function Location() {
     } else {
       alert("The browser doesn't support GPS");
     }
-  }, [setCurrentPosition]);
+  }, [dispatch]);
 
   return (
     <StyledLocation>
-      GPS is enabled / disabled
+      GPS is {gps ? 'enabled' : 'disabled'}
       <StyledLocationContent>
         <div
           css={css`

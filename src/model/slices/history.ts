@@ -5,7 +5,7 @@ import { RootState, State } from '@/model';
 
 export interface Record {
   timestamp: number;
-  action: 'clock in' | 'clock out';
+  action: 'in' | 'out';
   address: string;
 }
 

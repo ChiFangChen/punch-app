@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { capitalizeFirstLetter } from '@/utils/text';
 import { getTimeDetail } from '@/utils/time';
 import { Record } from '@/model/slices/history';
 import { StyledRecordItem } from './styles';
@@ -11,7 +10,7 @@ const RecordItem = ({ timestamp, action, address }: RecordProps) => {
   return (
     <StyledRecordItem>
       <div>
-        {date} @ {displayTime} {displayStatus} <span>{capitalizeFirstLetter(action)}</span>
+        {date} @ {displayTime} {displayStatus} <span>Clock {action}</span>
       </div>
       <div>{address}</div>
     </StyledRecordItem>
