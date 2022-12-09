@@ -1,13 +1,8 @@
 import { memo } from 'react';
 import { capitalizeFirstLetter } from '@/utils/text';
 import { getTimeDetail } from '@/utils/time';
+import { Record } from '@/model/slices/history';
 import { StyledRecordItem } from './styles';
-
-interface Record {
-  timestamp: number;
-  action: 'clock in' | 'clock out';
-  address: string;
-}
 
 type RecordProps = Record;
 

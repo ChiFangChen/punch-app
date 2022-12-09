@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import { Title, Label, TextInput } from '@/components';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
+import { useAppDispatch, useAppSelector, actions } from '@/model';
 import {
   StyledSettings,
   StyledSettingBlock,
@@ -12,12 +13,9 @@ import RangeBarContainer from './RangeBarContainer';
 import { RangeBarContainerProps } from './RangeBarContainer/RangeBarContainer';
 
 function Settings() {
-  const defaultValues = {
-    range: 10,
-    latitude: 23,
-    longitude: 123,
-  };
-  const rangeRef = useRef(defaultValues.range);
+  const dispatch = useAppDispatch();
+  const config = useAppSelector((state) => state.config.data);
+  const rangeRef = useRef(config.range);
   const latitudeRef = useRef<HTMLInputElement>(null);
   const longitudeRef = useRef<HTMLInputElement>(null);
 
@@ -56,7 +54,7 @@ function Settings() {
       return;
     }
 
-    console.log(res);
+    dispatch(actions.saveConfigAsync(res));
   };
 
   return (
@@ -82,7 +80,7 @@ function Settings() {
               >
                 {MIN_RANGE}KM
               </span>
-              <RangeBarContainer onChange={onRangeChange} defaultValue={defaultValues.range} />
+              <RangeBarContainer onChange={onRangeChange} defaultValue={config.range} />
               <span
                 css={css`
                   color: #8cbaef;
@@ -105,7 +103,7 @@ function Settings() {
               id="latitude"
               name="latitude"
               ref={latitudeRef}
-              defaultValue={defaultValues.latitude}
+              defaultValue={config.latitude}
             />
           </StyledSettingItem>
 
@@ -116,7 +114,7 @@ function Settings() {
               id="longitude"
               name="longitude"
               ref={longitudeRef}
-              defaultValue={defaultValues.longitude}
+              defaultValue={config.longitude}
             />
           </StyledSettingItem>
         </StyledSettingBlock>

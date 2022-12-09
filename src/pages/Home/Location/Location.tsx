@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useAppSelector } from '@/model';
 
 import { StyledLocation, StyledLocationContent } from './styles';
 
@@ -9,7 +10,9 @@ enum LocationText {
 }
 
 function Location() {
-  const [latitude, longitude] = [123, 23];
+  const {
+    data: { latitude, longitude },
+  } = useAppSelector((state) => state.config);
   const text = LocationText.far;
 
   return (
