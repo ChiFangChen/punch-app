@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { css } from '@emotion/react';
 import { Title, Label, TextInput } from '@/components';
+import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
 import {
   StyledSettings,
   StyledSettingBlock,
@@ -34,8 +35,8 @@ function Settings() {
       longitude: Number(longitudeRef.current?.value),
     };
 
-    if (5 > res.range || res.range > 20) {
-      alert('range should be between 5 and 20');
+    if (MIN_RANGE > res.range || res.range > MAX_RANGE) {
+      alert(`range should be between ${MIN_RANGE} and ${MAX_RANGE}`);
       return;
     }
 
@@ -79,7 +80,7 @@ function Settings() {
                   font-weight: bold;
                 `}
               >
-                5KM
+                {MIN_RANGE}KM
               </span>
               <RangeBarContainer onChange={onRangeChange} defaultValue={defaultValues.range} />
               <span
@@ -88,7 +89,7 @@ function Settings() {
                   font-weight: bold;
                 `}
               >
-                20KM
+                {MAX_RANGE}KM
               </span>
             </div>
           </StyledSettingItem>

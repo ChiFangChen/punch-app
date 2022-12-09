@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
 
 const StyledRangeBar = styled('div')`
   flex: 1;
@@ -27,7 +28,7 @@ const StyledRangeValue = styled('div')<StyledRangeValueProps>`
   transform: ${(prop) => {
     const input = document.getElementById('range');
     const inputWidth = input?.getBoundingClientRect().width || 0;
-    const offset = ((inputWidth - 50) / (20 - 5)) * (prop.value - 5);
+    const offset = ((inputWidth - 50) / (MAX_RANGE - MIN_RANGE)) * (prop.value - MIN_RANGE);
     return `translateX(${offset}px)`;
   }};
 `;
