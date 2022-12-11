@@ -5,6 +5,8 @@ const useUserGPS = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    let geoId: number;
+
     if ('permissions' in navigator) {
       navigator.permissions.query({ name: 'geolocation' }).then(function (permissionStatus) {
         if (permissionStatus.state === 'denied') {
@@ -36,17 +38,17 @@ const useUserGPS = () => {
 
             navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
 
-            const geoId = navigator.geolocation.watchPosition(successHandler, errorHandler);
-
-            return () => {
-              navigator.geolocation.clearWatch(geoId);
-            };
+            geoId = navigator.geolocation.watchPosition(successHandler, errorHandler);
           } else {
             alert("The browser doesn't support GPS");
           }
         }
       });
     }
+
+    return () => {
+      if (geoId) navigator.geolocation.clearWatch(geoId);
+    };
   }, [dispatch]);
 };
 
