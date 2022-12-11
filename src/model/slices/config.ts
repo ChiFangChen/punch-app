@@ -7,7 +7,7 @@ import {
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
 } from '@/utils/constants';
-import { State, actions as wholeActions } from '@/model';
+import { State } from '@/model';
 import { getDistance } from '@/utils/getDistance';
 
 interface App {
@@ -17,7 +17,7 @@ interface App {
 }
 
 interface User {
-  gps: boolean;
+  gps?: boolean;
   coordinates?: [number, number];
   distance?: number;
   inDistance: boolean;
@@ -36,7 +36,7 @@ const initialState: State<Config> = {
       longitude: DEFAULT_LONGITUDE,
     },
     user: {
-      gps: false,
+      gps: undefined,
       coordinates: undefined,
       distance: undefined,
       inDistance: false,
@@ -50,12 +50,22 @@ export const configSlice = createSlice({
   reducers: {
     updateUser: (state, action) => {
       const { latitude, longitude } = state.data.app;
-      const distance = getDistance(
-        latitude,
-        longitude,
-        action.payload.coordinates[0],
-        action.payload.coordinates[1]
-      );
+      let additional = {};
+
+      if (action.payload.coordinates) {
+        const distance = getDistance(
+          latitude,
+          longitude,
+          action.payload.coordinates[0],
+          action.payload.coordinates[1]
+        );
+        additional = {
+          ...additional,
+          distance,
+          inDistance: distance <= state.data.app.range,
+        };
+      }
+
       return {
         ...state,
         data: {
@@ -63,12 +73,7 @@ export const configSlice = createSlice({
           user: {
             ...state.data.user,
             ...action.payload,
-            ...(action.payload.coordinates
-              ? {
-                  distance,
-                  inDistance: distance <= state.data.app.range,
-                }
-              : {}),
+            ...additional,
           },
         },
       };
@@ -82,12 +87,22 @@ export const configSlice = createSlice({
         data: { ...state.data, app: action.payload },
       }))
       .addCase(saveAppConfigAsync.fulfilled, (state, action) => {
-        const distance = getDistance(
-          action.payload.latitude,
-          action.payload.longitude,
-          state.data.user.coordinates[0],
-          state.data.user.coordinates[1]
-        );
+        let additional = {};
+
+        if (state.data.user.coordinates) {
+          const distance = getDistance(
+            action.payload.latitude,
+            action.payload.longitude,
+            state.data.user.coordinates[0],
+            state.data.user.coordinates[1]
+          );
+          additional = {
+            ...additional,
+            distance,
+            inDistance: distance <= action.payload.range,
+          };
+        }
+
         return {
           ...state,
           data: {
@@ -95,8 +110,7 @@ export const configSlice = createSlice({
             app: action.payload,
             user: {
               ...state.data.user,
-              distance,
-              inDistance: distance <= action.payload.range,
+              ...additional,
             },
           },
         };
