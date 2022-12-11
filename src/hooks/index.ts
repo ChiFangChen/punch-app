@@ -1,3 +1,4 @@
+import useGetTime from './useGetTime';
 import useUserGPS from './useUserGPS';
 
-export { useUserGPS };
+export { useGetTime, useUserGPS };
