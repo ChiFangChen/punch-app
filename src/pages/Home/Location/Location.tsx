@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 import { css } from '@emotion/react';
 import { useAppSelector } from '@/model';
 import { useUserGPS } from '@/hooks';
+import { Loading } from '@/components';
 
 import { StyledLocation, StyledLocationContent } from './styles';
 
 enum LocationText {
-  'loading' = 'Positioning',
   'disabled' = 'Please enable GPS',
   'enabled' = 'You Arrived',
   'far' = 'You are {{distance}} km away from office.',
@@ -18,8 +18,7 @@ function Location() {
   );
   const [currentLatitude, currentLongitude] = coordinates || [null, null];
   const text = useMemo(() => {
-    if (gps === undefined) return LocationText.loading;
-    if (!gps)
+    if (!gps) {
       return (
         <span
           css={css`
@@ -29,6 +28,7 @@ function Location() {
           {LocationText.disabled}
         </span>
       );
+    }
     if (inDistance) return LocationText.enabled;
     return LocationText.far.replace('{{distance}}', `${distance}`);
   }, [gps, distance, inDistance]);
@@ -63,10 +63,13 @@ function Location() {
 
         <div
           css={css`
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: 600;
           `}
         >
-          {text}
+          {gps === undefined || distance === undefined ? <Loading size={24} /> : text}
         </div>
       </StyledLocationContent>
     </StyledLocation>
