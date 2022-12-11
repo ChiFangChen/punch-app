@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 const StyledClockBlock = styled('div')`
   display: flex;
   flex-direction: column;
-  margin: 0 30px;
+  margin: 0 50px;
 `;
 
 const StyledClock = styled('div')`
