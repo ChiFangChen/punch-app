@@ -14,6 +14,7 @@ const useUserGPS = () => {
           dispatch(actions.updateUser({ gps: false }));
           alert('Please turn on the permission of geolocation');
         } else {
+          dispatch(actions.updateUser({ gps: true }));
           if ('geolocation' in navigator) {
             const successHandler = ({
               coords: { latitude, longitude },
