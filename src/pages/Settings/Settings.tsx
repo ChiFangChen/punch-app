@@ -1,8 +1,8 @@
-import { useRef, ForwardedRef, forwardRef } from 'react';
+import { useRef } from 'react';
 import { css } from '@emotion/react';
-import { Title, Label, TextInput } from '@/components';
+import { Title, Label } from '@/components';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
-import { useAppDispatch, useAppSelector, actions } from '@/model';
+import { useAppDispatch, actions } from '@/model';
 import {
   StyledSettings,
   StyledSettingBlock,
@@ -11,20 +11,7 @@ import {
 } from './styles';
 import { RangeInputProps } from './RangeInput/RangeInput';
 import RangeBarContainer from './RangeInput';
-
-const LatitudeInput = forwardRef((_, ref: ForwardedRef<HTMLInputElement>) => {
-  const defaultValue = useAppSelector((state) => state.config.data.app.latitude);
-  return (
-    <TextInput type="text" id="latitude" name="latitude" ref={ref} defaultValue={defaultValue} />
-  );
-});
-
-const LongitudeInput = forwardRef((_, ref: ForwardedRef<HTMLInputElement>) => {
-  const defaultValue = useAppSelector((state) => state.config.data.app.longitude);
-  return (
-    <TextInput type="text" id="longitude" name="longitude" ref={ref} defaultValue={defaultValue} />
-  );
-});
+import CoordinateInput from './CoordinateInput';
 
 function Settings() {
   const dispatch = useAppDispatch();
@@ -108,12 +95,12 @@ function Settings() {
 
           <StyledSettingItem>
             <Label htmlFor="latitude">Latitude</Label>
-            <LatitudeInput ref={latitudeRef} />
+            <CoordinateInput ref={latitudeRef} name="latitude" />
           </StyledSettingItem>
 
           <StyledSettingItem>
             <Label htmlFor="longitude">Longitude</Label>
-            <LongitudeInput ref={longitudeRef} />
+            <CoordinateInput ref={longitudeRef} name="longitude" />
           </StyledSettingItem>
         </StyledSettingBlock>
       </div>
