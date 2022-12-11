@@ -23,7 +23,6 @@ const ClockButton = () => {
     dispatch(
       actions.appendHistoryAsync({
         action: nextAction,
-        address: '新北市...',
         timestamp: Date.now(),
       })
     );

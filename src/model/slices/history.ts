@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
 import { HISTORY } from '@/utils/constants';
 import { RootState, State } from '@/model';
+import { getAddress } from '@/apis';
 
 export interface Record {
   timestamp: number;
@@ -42,14 +43,25 @@ const getHistoryAsync = createAsyncThunk<Record[]>(GET_HISTORY, async () => {
   return history;
 });
 
-const appendHistoryAsync = createAsyncThunk<Record, Record>(
+const appendHistoryAsync = createAsyncThunk<Record, { action: 'in' | 'out'; timestamp: number }>(
   APPEND_RECORD,
   async (record, { getState }) => {
     const {
-      history: { data },
+      history: { data: history },
+      config: {
+        data: { user },
+      },
     } = getState() as RootState;
-    setLocalStorage(HISTORY, [record, ...data]);
-    return record;
+    const addressResult = await getAddress({
+      latitude: user.coordinates[0],
+      longitude: user.coordinates[1],
+    });
+    const data = {
+      ...record,
+      address: addressResult.features[0].place_name,
+    };
+    setLocalStorage(HISTORY, [data, ...history]);
+    return data;
   }
 );
 
