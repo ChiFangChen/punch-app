@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useRef, ForwardedRef, forwardRef } from 'react';
 import { css } from '@emotion/react';
 import { Title, Label, TextInput } from '@/components';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
@@ -9,22 +9,32 @@ import {
   StyledSettingBlockTitle,
   StyledSettingItem,
 } from './styles';
-import RangeBarContainer from './RangeBarContainer';
-import { RangeBarContainerProps } from './RangeBarContainer/RangeBarContainer';
+import { RangeInputProps } from './RangeInput/RangeInput';
+import RangeBarContainer from './RangeInput';
+
+const LatitudeInput = forwardRef((_, ref: ForwardedRef<HTMLInputElement>) => {
+  const defaultValue = useAppSelector((state) => state.config.data.app.latitude);
+  return (
+    <TextInput type="text" id="latitude" name="latitude" ref={ref} defaultValue={defaultValue} />
+  );
+});
+
+const LongitudeInput = forwardRef((_, ref: ForwardedRef<HTMLInputElement>) => {
+  const defaultValue = useAppSelector((state) => state.config.data.app.longitude);
+  return (
+    <TextInput type="text" id="longitude" name="longitude" ref={ref} defaultValue={defaultValue} />
+  );
+});
 
 function Settings() {
   const dispatch = useAppDispatch();
-  const { range, latitude, longitude } = useAppSelector((state) => state.config.data.app);
-  const rangeRef = useRef(range);
+  const rangeRef = useRef(MIN_RANGE);
   const latitudeRef = useRef<HTMLInputElement>(null);
   const longitudeRef = useRef<HTMLInputElement>(null);
 
-  const onRangeChange: RangeBarContainerProps['onChange'] = useCallback(
-    (data) => {
-      rangeRef.current = data;
-    },
-    [rangeRef]
-  );
+  const onRangeChange: RangeInputProps['onChange'] = (data) => {
+    rangeRef.current = data;
+  };
 
   const onSave = () => {
     const res = {
@@ -80,7 +90,7 @@ function Settings() {
               >
                 {MIN_RANGE}KM
               </span>
-              <RangeBarContainer onChange={onRangeChange} defaultValue={range} />
+              <RangeBarContainer onChange={onRangeChange} />
               <span
                 css={css`
                   color: #8cbaef;
@@ -98,24 +108,12 @@ function Settings() {
 
           <StyledSettingItem>
             <Label htmlFor="latitude">Latitude</Label>
-            <TextInput
-              type="text"
-              id="latitude"
-              name="latitude"
-              ref={latitudeRef}
-              defaultValue={latitude}
-            />
+            <LatitudeInput ref={latitudeRef} />
           </StyledSettingItem>
 
           <StyledSettingItem>
             <Label htmlFor="longitude">Longitude</Label>
-            <TextInput
-              type="text"
-              id="longitude"
-              name="longitude"
-              ref={longitudeRef}
-              defaultValue={longitude}
-            />
+            <LongitudeInput ref={longitudeRef} />
           </StyledSettingItem>
         </StyledSettingBlock>
       </div>

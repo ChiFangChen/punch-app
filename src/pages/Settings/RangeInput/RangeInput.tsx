@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import { RangeBar } from '@/components';
+import { useAppSelector } from '@/model';
 
-export type RangeBarContainerProps = {
+export type RangeInputProps = {
   onChange: (data: number) => void;
-  defaultValue: number;
 };
 
-const RangeBarContainer = ({ onChange, defaultValue }: RangeBarContainerProps) => {
-  const [range, setRange] = useState(() => defaultValue);
+const RangeInput = ({ onChange }: RangeInputProps) => {
+  const defaultValue = useAppSelector((state) => state.config.data.app.range);
+  const [range, setRange] = useState(defaultValue);
   const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    onChange(range);
+  }, [onChange, range]);
 
   // use isReady to make sure when getting the input width is not empty
   useEffect(() => {
@@ -20,7 +25,6 @@ const RangeBarContainer = ({ onChange, defaultValue }: RangeBarContainerProps) =
       onChange={(e) => {
         const value = Number(e.currentTarget.value);
         setRange(value);
-        onChange(value);
       }}
       value={range}
       isReady={isReady}
@@ -28,4 +32,4 @@ const RangeBarContainer = ({ onChange, defaultValue }: RangeBarContainerProps) =
   );
 };
 
-export default RangeBarContainer;
+export default RangeInput;
