@@ -3,9 +3,9 @@ import { getTimeDetail } from '@/utils/time';
 import { Record } from '@/model/slices/history';
 import { StyledRecordItem } from './styles';
 
-type RecordProps = Record;
+type ListItemProps = Record;
 
-const RecordItem = ({ timestamp, action, address }: RecordProps) => {
+const ListItem = ({ timestamp, action, address }: ListItemProps) => {
   const { date, displayTime, displayStatus } = getTimeDetail(timestamp);
   return (
     <StyledRecordItem>
@@ -17,4 +17,4 @@ const RecordItem = ({ timestamp, action, address }: RecordProps) => {
   );
 };
 
-export default memo(RecordItem);
+export default memo(ListItem);
