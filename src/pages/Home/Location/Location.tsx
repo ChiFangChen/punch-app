@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
 import { useAppSelector } from '@/model';
 import { useUserGPS } from '@/hooks';
@@ -6,24 +7,21 @@ import { Loading } from '@/components';
 
 import { StyledLocation, StyledLocationContent } from './styles';
 
-enum LocationText {
-  'disabled' = 'Please enable GPS',
-  'enabled' = 'You Arrived',
-  'far' = 'You are {{distance}} km away from office.',
-}
-
 const Location = () => {
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
   const { gps, coordinates, distance, inDistance } = useAppSelector(
     (state) => state.config.data.user
   );
   const [currentLatitude, currentLongitude] = coordinates || [null, null];
 
   const title = useMemo(() => {
-    let status = '...';
-    if (gps) status = 'enabled';
-    else if (gps !== undefined) status = 'disabled';
-    return `GPS is ${status}`;
-  }, [gps]);
+    if (gps) return t('gps-enable');
+    if (gps !== undefined) return t('gps-disable');
+    return t('gps-loading');
+  }, [gps, language]);
 
   const text = useMemo(() => {
     if (!gps) {
@@ -33,13 +31,13 @@ const Location = () => {
             color: #1f38ba;
           `}
         >
-          {LocationText.disabled}
+          {t('gps-disable-hint')}
         </span>
       );
     }
-    if (inDistance) return LocationText.enabled;
-    return LocationText.far.replace('{{distance}}', `${distance}`);
-  }, [gps, distance, inDistance]);
+    if (inDistance) return t('gps-enable-hint');
+    return t('far-from-office', { distance });
+  }, [gps, distance, inDistance, language]);
 
   useUserGPS();
 
@@ -57,15 +55,19 @@ const Location = () => {
               font-weight: 500;
             `}
           >
-            Current position
+            {t('position')}
           </div>
           <div
             css={css`
               font-size: 12px;
             `}
           >
-            <div>Latitude: {currentLatitude || '?'},</div>
-            <div>Longitude: {currentLongitude || '?'}</div>
+            <div>
+              {t('latitude')}: {currentLatitude || '?'},
+            </div>
+            <div>
+              {t('longitude')}: {currentLongitude || '?'}
+            </div>
           </div>
         </div>
 

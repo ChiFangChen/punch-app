@@ -1,4 +1,22 @@
 {
   "home": "首頁",
-  "settings": "設定"
+  "settings": "設定",
+  "history": "最近打卡記錄",
+  "disabled": "範圍外",
+  "clock-in": "上班",
+  "clock-out": "下班",
+  "gps-loading": "定位功能⋯⋯",
+  "gps-enable": "定位功能已啟用",
+  "gps-disable": "定位功能已停用",
+  "gps-enable-hint": "已抵達",
+  "gps-disable-hint": "請開啟定位功能",
+  "far-from-office": "距離辦公室還有 {{distance}} 公里",
+  "position": "當前位置",
+  "latitude": "緯度",
+  "longitude": "經度",
+  "set-range": "設定打卡範圍",
+  "range-unit": "範圍公里內",
+  "km": "公里",
+  "set-location": "設定辦公室位置",
+  "save": "儲存"
 }

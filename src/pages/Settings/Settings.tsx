@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
 import { Title, Label } from '@/components';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
@@ -14,6 +15,7 @@ import RangeBarContainer from './RangeInput';
 import CoordinateInput from './CoordinateInput';
 
 const Settings = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rangeRef = useRef(MIN_RANGE);
   const latitudeRef = useRef<HTMLInputElement>(null);
@@ -58,13 +60,13 @@ const Settings = () => {
 
   return (
     <StyledSettings>
-      <Title>Settings</Title>
+      <Title>{t('settings')}</Title>
 
       <div>
         <StyledSettingBlock>
-          <StyledSettingBlockTitle>Set clockIn range</StyledSettingBlockTitle>
+          <StyledSettingBlockTitle>{t('set-range')}</StyledSettingBlockTitle>
           <StyledSettingItem>
-            <Label htmlFor="range">Range in KM</Label>
+            <Label htmlFor="range">{t('range-unit')}</Label>
             <div
               css={css`
                 display: flex;
@@ -77,7 +79,8 @@ const Settings = () => {
                   font-weight: bold;
                 `}
               >
-                {MIN_RANGE}KM
+                {MIN_RANGE}
+                {t('km')}
               </span>
               <RangeBarContainer onChange={onRangeChange} />
               <span
@@ -86,22 +89,23 @@ const Settings = () => {
                   font-weight: bold;
                 `}
               >
-                {MAX_RANGE}KM
+                {MAX_RANGE}
+                {t('km')}
               </span>
             </div>
           </StyledSettingItem>
         </StyledSettingBlock>
 
         <StyledSettingBlock>
-          <StyledSettingBlockTitle>Set office location</StyledSettingBlockTitle>
+          <StyledSettingBlockTitle>{t('set-location')}</StyledSettingBlockTitle>
 
           <StyledSettingItem>
-            <Label htmlFor="latitude">Latitude</Label>
+            <Label htmlFor="latitude">{t('latitude')}</Label>
             <CoordinateInput ref={latitudeRef} name="latitude" />
           </StyledSettingItem>
 
           <StyledSettingItem>
-            <Label htmlFor="longitude">Longitude</Label>
+            <Label htmlFor="longitude">{t('longitude')}</Label>
             <CoordinateInput ref={longitudeRef} name="longitude" />
           </StyledSettingItem>
         </StyledSettingBlock>
@@ -127,7 +131,7 @@ const Settings = () => {
           `}
           onClick={onSave}
         >
-          SAVE
+          {t('save')}
         </button>
       </div>
     </StyledSettings>

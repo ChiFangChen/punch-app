@@ -1,4 +1,22 @@
 {
   "home": "HOME",
-  "settings": "Settings"
+  "settings": "Settings",
+  "history": "Recent clocking history",
+  "disabled": "Out of range",
+  "clock-in": "Clock in",
+  "clock-out": "Clock out",
+  "gps-loading": "GPS is ...",
+  "gps-enable": "GPS is enabled",
+  "gps-disable": "GPS is disabled",
+  "gps-enable-hint": "You Arrived",
+  "gps-disable-hint": "Please enable GPS",
+  "far-from-office": "You are {{distance}} km away from office.",
+  "position": "Current position",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "set-range": "Set clockIn range",
+  "range-unit": "Range in KM",
+  "km": "KM",
+  "set-location": "Set office location",
+  "save": "SAVE"
 }

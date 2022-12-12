@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector, actions } from '@/model';
 import { StyledClockButton } from './styles';
 
-enum ClockButtonText {
-  'disabled' = 'Out of range',
-  'enabled' = 'Clock ',
-}
-
 const ClockButton = () => {
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
   const dispatch = useAppDispatch();
   const { history, enabled } = useAppSelector((state) => ({
     history: state.history.data,
@@ -15,9 +15,9 @@ const ClockButton = () => {
   }));
   const nextAction = useMemo(() => (history[0]?.action === 'in' ? 'out' : 'in'), [history]);
   const text = useMemo(() => {
-    if (!enabled) return ClockButtonText.disabled;
-    return ClockButtonText.enabled + nextAction;
-  }, [enabled, nextAction]);
+    if (!enabled) return t('disabled');
+    return t(`clock-${nextAction}`);
+  }, [enabled, nextAction, language]);
 
   const onPunch = useCallback(() => {
     dispatch(

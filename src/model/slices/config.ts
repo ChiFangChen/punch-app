@@ -1,19 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import i18n from '@/i18n';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
 import {
+  LANGUAGE,
   RANGE,
   COORDINATE,
   MIN_RANGE,
+  DEFAULT_LANGUAGE,
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
 } from '@/utils/constants';
-import { Config, App, State } from '@/model/types';
+import { Language, Config, App, State } from '@/model/types';
 import { getDistance } from '@/utils/getDistance';
 
 const initialState: State<Config> = {
   isReady: false,
   data: {
     app: {
+      language: DEFAULT_LANGUAGE,
       range: MIN_RANGE,
       latitude: DEFAULT_LATITUDE,
       longitude: DEFAULT_LONGITUDE,
@@ -28,24 +32,35 @@ const initialState: State<Config> = {
 };
 
 // action constants
-const GET_RANGE = 'GET_RANGE';
-const SAVE_RANGE = 'SAVE_RANGE';
+const GET_APP_CONFIG = 'GET_APP_CONFIG';
+const SAVE_APP_CONFIG = 'SAVE_APP_CONFIG';
+const SAVE_LANGUAGE = 'SAVE_LANGUAGE';
 
 // action creators
-const getAppConfigAsync = createAsyncThunk<App>(GET_RANGE, async () => {
+const getAppConfigAsync = createAsyncThunk<App>(GET_APP_CONFIG, async () => {
+  const language = getLocalStorage(LANGUAGE) || DEFAULT_LANGUAGE;
+  i18n.changeLanguage(language);
   const range = getLocalStorage(RANGE) || MIN_RANGE;
   const [latitude, longitude] = getLocalStorage(COORDINATE) || [
     DEFAULT_LATITUDE,
     DEFAULT_LONGITUDE,
   ];
-  return { range, latitude, longitude };
+  return { language, range, latitude, longitude };
 });
 
-const saveAppConfigAsync = createAsyncThunk<App, App>(SAVE_RANGE, async (config) => {
+const saveAppConfigAsync = createAsyncThunk<App, App>(SAVE_APP_CONFIG, async (config) => {
   setLocalStorage(RANGE, config.range);
   setLocalStorage(COORDINATE, [config.latitude, config.longitude]);
   return config;
 });
+
+const saveLanguageAsync = createAsyncThunk<{ language: Language }, Language>(
+  SAVE_LANGUAGE,
+  async (language) => {
+    setLocalStorage(LANGUAGE, language);
+    return { language };
+  }
+);
 
 export const configSlice = createSlice({
   name: 'config',
@@ -87,7 +102,13 @@ export const configSlice = createSlice({
       .addCase(getAppConfigAsync.fulfilled, (state, action) => ({
         ...state,
         isReady: true,
-        data: { ...state.data, app: action.payload },
+        data: {
+          ...state.data,
+          app: {
+            ...state.data.app,
+            ...action.payload,
+          },
+        },
       }))
       .addCase(saveAppConfigAsync.fulfilled, (state, action) => {
         let additional = {};
@@ -110,18 +131,36 @@ export const configSlice = createSlice({
           ...state,
           data: {
             ...state.data,
-            app: action.payload,
+            app: {
+              ...state.data.app,
+              ...action.payload,
+            },
             user: {
               ...state.data.user,
               ...additional,
             },
           },
         };
-      });
+      })
+      .addCase(saveLanguageAsync.fulfilled, (state, action) => ({
+        ...state,
+        data: {
+          ...state.data,
+          app: {
+            ...state.data.app,
+            language: action.payload.language,
+          },
+        },
+      }));
   },
 });
 
-export const actions = { getAppConfigAsync, saveAppConfigAsync, ...configSlice.actions };
+export const actions = {
+  getAppConfigAsync,
+  saveAppConfigAsync,
+  saveLanguageAsync,
+  ...configSlice.actions,
+};
 
 // reducer
 export default configSlice.reducer;

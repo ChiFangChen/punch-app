@@ -11,7 +11,11 @@ const StyledNavLeft = styled('nav')`
 const StyledNavRight = styled('nav')`
   float: right;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+
+  > select {
+    margin-left: 12px;
+  }
 `;
 
 export { StyledNav, StyledNavLeft, StyledNavRight };

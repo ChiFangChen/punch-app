@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
+import { types } from '@/model';
 
 const StyledRangeBar = styled('div')`
   flex: 1;
@@ -12,6 +13,7 @@ const StyledRangeBar = styled('div')`
 
 type StyledRangeValueProps = {
   value: number;
+  language: types.Language;
 };
 
 const StyledRangeValue = styled('div')<StyledRangeValueProps>`

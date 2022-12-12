@@ -8,7 +8,10 @@ export type RootState = {
   history: State<Record[]>;
 };
 
+export type Language = 'en' | 'zh';
+
 export interface App {
+  language?: Language;
   range: number;
   latitude: number;
   longitude: number;
@@ -20,6 +23,7 @@ interface User {
   distance?: number;
   inDistance: boolean;
 }
+
 export interface Config {
   app: App;
   user: User;
