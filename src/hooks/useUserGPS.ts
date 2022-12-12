@@ -8,7 +8,7 @@ const useUserGPS = () => {
     let geoId: number;
 
     if ('permissions' in navigator) {
-      navigator.permissions.query({ name: 'geolocation' }).then(function (permissionStatus) {
+      navigator.permissions.query({ name: 'geolocation' }).then((permissionStatus) => {
         if (permissionStatus.state === 'denied') {
           // navigator.permissions.revoke({ name: 'geolocation' }) is no longer supported
           dispatch(actions.updateUser({ gps: false }));

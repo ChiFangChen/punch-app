@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { getTimeDetail } from '@/utils/time';
-import { Record } from '@/model/slices/history';
+import { Record } from '@/model/types';
 import { StyledRecordItem } from './styles';
 
 type ListItemProps = Record;

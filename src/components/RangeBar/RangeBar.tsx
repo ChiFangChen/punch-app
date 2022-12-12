@@ -1,5 +1,5 @@
-import { StyledRangeBar, StyledRangeValue, StyledRangeInput } from './styles';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
+import { StyledRangeBar, StyledRangeValue, StyledRangeInput } from './styles';
 
 type RangeBarProps = {
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;

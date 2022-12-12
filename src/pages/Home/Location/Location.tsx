@@ -12,11 +12,19 @@ enum LocationText {
   'far' = 'You are {{distance}} km away from office.',
 }
 
-function Location() {
+const Location = () => {
   const { gps, coordinates, distance, inDistance } = useAppSelector(
     (state) => state.config.data.user
   );
   const [currentLatitude, currentLongitude] = coordinates || [null, null];
+
+  const title = useMemo(() => {
+    let status = '...';
+    if (gps) status = 'enabled';
+    else if (gps !== undefined) status = 'disabled';
+    return `GPS is ${status}`;
+  }, [gps]);
+
   const text = useMemo(() => {
     if (!gps) {
       return (
@@ -37,7 +45,7 @@ function Location() {
 
   return (
     <StyledLocation>
-      GPS is {gps ? 'enabled' : gps === undefined ? '...' : 'disabled'}
+      {title}
       <StyledLocationContent>
         <div
           css={css`
@@ -74,6 +82,6 @@ function Location() {
       </StyledLocationContent>
     </StyledLocation>
   );
-}
+};
 
 export default Location;

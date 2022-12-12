@@ -4,17 +4,15 @@ import { Loading } from '@/components';
 import ListItem from './ListItem';
 import { StyledRecordList } from './styles';
 
-function RecordList() {
+const RecordList = () => {
   const { isReady, data: history } = useAppSelector((state) => state.history);
 
   return (
     <StyledRecordList>
       {isReady ? (
-        history.map(({ timestamp, action, address }) => {
-          return (
-            <ListItem key={timestamp} timestamp={timestamp} action={action} address={address} />
-          );
-        })
+        history.map(({ timestamp, action, address }) => (
+          <ListItem key={timestamp} timestamp={timestamp} action={action} address={address} />
+        ))
       ) : (
         <div
           css={css`
@@ -28,6 +26,6 @@ function RecordList() {
       )}
     </StyledRecordList>
   );
-}
+};
 
 export default RecordList;

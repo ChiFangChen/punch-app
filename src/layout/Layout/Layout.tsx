@@ -16,7 +16,7 @@ const Layout = () => {
 
   return (
     <StyledLayout>
-      <Header></Header>
+      <Header />
 
       <StyledContent>{isReady ? <Outlet /> : <Loading />}</StyledContent>
     </StyledLayout>

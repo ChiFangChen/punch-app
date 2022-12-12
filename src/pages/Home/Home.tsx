@@ -4,16 +4,14 @@ import History from './History';
 
 import { StyledHome } from './styles';
 
-function Home() {
-  return (
-    <StyledHome>
-      <Location></Location>
+const Home = () => (
+  <StyledHome>
+    <Location />
 
-      <ClockBlock></ClockBlock>
+    <ClockBlock />
 
-      <History></History>
-    </StyledHome>
-  );
-}
+    <History />
+  </StyledHome>
+);
 
 export default Home;

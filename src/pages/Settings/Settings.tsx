@@ -13,7 +13,7 @@ import { RangeInputProps } from './RangeInput/RangeInput';
 import RangeBarContainer from './RangeInput';
 import CoordinateInput from './CoordinateInput';
 
-function Settings() {
+const Settings = () => {
   const dispatch = useAppDispatch();
   const rangeRef = useRef(MIN_RANGE);
   const latitudeRef = useRef<HTMLInputElement>(null);
@@ -38,7 +38,8 @@ function Settings() {
     if (Number.isNaN(res.latitude)) {
       alert('latitude should be number');
       return;
-    } else if (-90 > res.latitude || res.latitude > 90) {
+    }
+    if (res.latitude < -90 || res.latitude > 90) {
       alert('latitude should be between -90 and 90');
       return;
     }
@@ -46,7 +47,8 @@ function Settings() {
     if (Number.isNaN(res.longitude)) {
       alert('longitude should be number');
       return;
-    } else if (-180 > res.longitude || res.longitude > 180) {
+    }
+    if (res.longitude < -180 || res.longitude > 180) {
       alert('longitude should be between -180 and 180');
       return;
     }
@@ -111,6 +113,7 @@ function Settings() {
         `}
       >
         <button
+          type="button"
           css={css`
             background: #4691c9;
             border: 1px solid gray;
@@ -129,6 +132,6 @@ function Settings() {
       </div>
     </StyledSettings>
   );
-}
+};
 
 export default Settings;

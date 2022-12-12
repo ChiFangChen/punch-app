@@ -7,25 +7,8 @@ import {
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
 } from '@/utils/constants';
-import { State } from '@/model';
+import { Config, App, State } from '@/model/types';
 import { getDistance } from '@/utils/getDistance';
-
-interface App {
-  range: number;
-  latitude: number;
-  longitude: number;
-}
-
-interface User {
-  gps?: boolean;
-  coordinates?: [number, number];
-  distance?: number;
-  inDistance: boolean;
-}
-interface Config {
-  app: App;
-  user: User;
-}
 
 const initialState: State<Config> = {
   isReady: false,
@@ -43,6 +26,26 @@ const initialState: State<Config> = {
     },
   },
 };
+
+// action constants
+const GET_RANGE = 'GET_RANGE';
+const SAVE_RANGE = 'SAVE_RANGE';
+
+// action creators
+const getAppConfigAsync = createAsyncThunk<App>(GET_RANGE, async () => {
+  const range = getLocalStorage(RANGE) || MIN_RANGE;
+  const [latitude, longitude] = getLocalStorage(COORDINATE) || [
+    DEFAULT_LATITUDE,
+    DEFAULT_LONGITUDE,
+  ];
+  return { range, latitude, longitude };
+});
+
+const saveAppConfigAsync = createAsyncThunk<App, App>(SAVE_RANGE, async (config) => {
+  setLocalStorage(RANGE, config.range);
+  setLocalStorage(COORDINATE, [config.latitude, config.longitude]);
+  return config;
+});
 
 export const configSlice = createSlice({
   name: 'config',
@@ -116,26 +119,6 @@ export const configSlice = createSlice({
         };
       });
   },
-});
-
-// action constants
-const GET_RANGE = 'GET_RANGE';
-const SAVE_RANGE = 'SAVE_RANGE';
-
-// action creators
-const getAppConfigAsync = createAsyncThunk<App>(GET_RANGE, async () => {
-  const range = getLocalStorage(RANGE) || MIN_RANGE;
-  const [latitude, longitude] = getLocalStorage(COORDINATE) || [
-    DEFAULT_LATITUDE,
-    DEFAULT_LONGITUDE,
-  ];
-  return { range, latitude, longitude };
-});
-
-const saveAppConfigAsync = createAsyncThunk<App, App>(SAVE_RANGE, async (config) => {
-  setLocalStorage(RANGE, config.range);
-  setLocalStorage(COORDINATE, [config.latitude, config.longitude]);
-  return config;
 });
 
 export const actions = { getAppConfigAsync, saveAppConfigAsync, ...configSlice.actions };

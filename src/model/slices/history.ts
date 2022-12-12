@@ -1,37 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
 import { HISTORY } from '@/utils/constants';
-import { RootState, State } from '@/model';
+import { Record, RootState, State } from '@/model/types';
 import { getAddress } from '@/apis';
-
-export interface Record {
-  timestamp: number;
-  action: 'in' | 'out';
-  address: string;
-}
 
 const initialState: State<Record[]> = {
   isReady: false,
   data: [],
 };
-
-export const historySlice = createSlice({
-  name: 'history',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getHistoryAsync.fulfilled, (state, action) => ({
-        ...state,
-        isReady: true,
-        data: action.payload,
-      }))
-      .addCase(appendHistoryAsync.fulfilled, (state, action) => ({
-        ...state,
-        data: [action.payload, ...state.data],
-      }));
-  },
-});
 
 // action constants
 const GET_HISTORY = 'GET_HISTORY';
@@ -52,6 +28,9 @@ const appendHistoryAsync = createAsyncThunk<Record, { action: 'in' | 'out'; time
         data: { user },
       },
     } = getState() as RootState;
+
+    if (!user.coordinates) throw Error("Can't get user's coordinates");
+
     const addressResult = await getAddress({
       latitude: user.coordinates[0],
       longitude: user.coordinates[1],
@@ -64,6 +43,24 @@ const appendHistoryAsync = createAsyncThunk<Record, { action: 'in' | 'out'; time
     return data;
   }
 );
+
+export const historySlice = createSlice({
+  name: 'history',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getHistoryAsync.fulfilled, (state, action) => ({
+        ...state,
+        isReady: true,
+        data: action.payload,
+      }))
+      .addCase(appendHistoryAsync.fulfilled, (state, action) => ({
+        ...state,
+        data: [action.payload, ...state.data],
+      }));
+  },
+});
 
 export const actions = { getHistoryAsync, appendHistoryAsync };
 
