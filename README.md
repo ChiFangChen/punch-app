@@ -1,46 +1,39 @@
-# Getting Started with Create React App
+# Punch app
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Check the [Demo](https://chifangchen.github.io/punch-app/)
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Introduction
 
-### `npm start`
+This project was developed by `React`, `TypeScript` & `Emotion`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+There are 2 pages in the project, which are home and settings.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 🏠 home
 
-### `npm test`
+If the distance between the user and the company is within the range of the app settings, the user can punch in and out with the location address which is get from the mapbox API and the record will be saved in the browser.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### ⚙️ settings
 
-### `npm run build`
+You can reset the company's position and the max distance to restrict the punch behavior, and the settings will be saved in the browser.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Code design
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Every component will have at least 2 files in its folder, which are `index.ts` and `[componentName].tsx`. If there are some styled components relevant to it, there will be 1 more file called `styles.ts` to define some styled components in it.
 
-### `npm run eject`
+All common components are placed in the `components` folder. If a component that only the parent use, it will be placed in the parent's folder.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Use redux to manage the data, all the code of data flow is in the modal folder.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Standard functions and variables are defined in the `utils` folder.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Activate the APP
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Clone the repo
+- `npm install`
+- `npm start`
