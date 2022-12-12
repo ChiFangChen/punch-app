@@ -11,7 +11,7 @@ import {
   DEFAULT_LONGITUDE,
 } from '@/utils/constants';
 import { Language, Config, App, State } from '@/model/types';
-import { getDistance } from '@/utils/getDistance';
+import { getDistance } from '@/utils/distance';
 
 const initialState: State<Config> = {
   isReady: false,
