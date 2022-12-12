@@ -11,6 +11,7 @@ import {
   DEFAULT_LONGITUDE,
 } from '@/utils/constants';
 import { Language, Config, App, State } from '@/model/types';
+import { getLanguage } from '@/utils/language';
 import { getDistance } from '@/utils/distance';
 
 const initialState: State<Config> = {
@@ -38,7 +39,8 @@ const SAVE_LANGUAGE = 'SAVE_LANGUAGE';
 
 // action creators
 const getAppConfigAsync = createAsyncThunk<App>(GET_APP_CONFIG, async () => {
-  const language = getLocalStorage(LANGUAGE) || DEFAULT_LANGUAGE;
+  const language =
+    getLocalStorage(LANGUAGE) || (getLanguage() || '').startsWith('zh') ? 'zh' : 'en';
   i18n.changeLanguage(language);
   const range = getLocalStorage(RANGE) || MIN_RANGE;
   const [latitude, longitude] = getLocalStorage(COORDINATE) || [
