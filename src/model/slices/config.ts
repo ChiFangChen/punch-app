@@ -40,7 +40,7 @@ const SAVE_LANGUAGE = 'SAVE_LANGUAGE';
 // action creators
 const getAppConfigAsync = createAsyncThunk<App>(GET_APP_CONFIG, async () => {
   const language =
-    getLocalStorage(LANGUAGE) || (getLanguage() || '').startsWith('zh') ? 'zh' : 'en';
+    getLocalStorage(LANGUAGE) || ((getLanguage() || '').startsWith('zh') ? 'zh' : 'en');
   i18n.changeLanguage(language);
   const range = getLocalStorage(RANGE) || MIN_RANGE;
   const [latitude, longitude] = getLocalStorage(COORDINATE) || [
