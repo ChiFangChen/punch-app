@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import i18n from '@/i18n';
+import toast from 'react-hot-toast';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
 import { HISTORY } from '@/utils/constants';
 import { Record, RootState, State } from '@/model/types';
@@ -40,6 +42,9 @@ const appendHistoryAsync = createAsyncThunk<Record, { action: 'in' | 'out'; time
       address: addressResult.features[0].place_name,
     };
     setLocalStorage(HISTORY, [data, ...history]);
+
+    toast.success(i18n.t('clocked'));
+
     return data;
   }
 );

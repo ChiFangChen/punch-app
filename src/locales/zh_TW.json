@@ -27,5 +27,7 @@
   "longitude-number": "經度必須為數字",
   "longitude-limit": "經度必須介於 -180 到 180 之間",
   "api-error": "API 錯誤",
-  "unexpected-error": "發生未預期錯誤"
+  "unexpected-error": "發生未預期錯誤",
+  "saved": "儲存成功",
+  "clocked": "打卡成功"
 }

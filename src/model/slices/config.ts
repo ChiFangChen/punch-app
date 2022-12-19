@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import i18n from '@/i18n';
+import toast from 'react-hot-toast';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
 import {
   LANGUAGE,
@@ -53,6 +54,9 @@ const getAppConfigAsync = createAsyncThunk<App>(GET_APP_CONFIG, async () => {
 const saveAppConfigAsync = createAsyncThunk<App, App>(SAVE_APP_CONFIG, async (config) => {
   setLocalStorage(RANGE, config.range);
   setLocalStorage(COORDINATE, [config.latitude, config.longitude]);
+
+  toast.success(i18n.t('saved'));
+
   return config;
 });
 
@@ -60,6 +64,9 @@ const saveLanguageAsync = createAsyncThunk<{ language: Language }, Language>(
   SAVE_LANGUAGE,
   async (language) => {
     setLocalStorage(LANGUAGE, language);
+
+    toast.success(i18n.t('saved'));
+
     return { language };
   }
 );

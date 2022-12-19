@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
 import { LocalToastProvider } from 'react-local-toast';
 import Layout from '@/layout';
 import Home from '@/pages/Home';
@@ -20,6 +21,8 @@ const App = () => (
           </Route>
         </Routes>
       </HashRouter>
+
+      <Toaster />
     </LocalToastProvider>
   </Provider>
 );

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import i18n from 'i18next';
+import toast from 'react-hot-toast';
 import { ACCESS_TOKEN } from '@/utils/constants';
 
 type GetAddress = (data: {
@@ -16,9 +17,9 @@ export const getAddress: GetAddress = async ({ latitude, longitude }) => {
     throw Error(i18n.t('api-error') as string);
   } catch (error) {
     if (axios.isAxiosError(error) || error instanceof Error) {
-      alert(error.message);
+      toast.error(error.message);
     } else {
-      alert(i18n.t('unexpected-error'));
+      toast.error(i18n.t('unexpected-error'));
     }
     throw Error();
   }

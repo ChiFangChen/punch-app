@@ -27,5 +27,7 @@
   "longitude-number": "Longitude should be number",
   "longitude-limit": "Longitude should be between -180 and 180",
   "api-error": "API error",
-  "unexpected-error": "An unexpected error occurred"
+  "unexpected-error": "An unexpected error occurred",
+  "saved": "Saved",
+  "clocked": "Clocked"
 }

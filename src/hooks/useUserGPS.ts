@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { useAppDispatch, actions } from '@/model';
 
 const useUserGPS = () => {
@@ -13,7 +14,7 @@ const useUserGPS = () => {
       if (permissionStatusState === 'denied') {
         // navigator.permissions.revoke({ name: 'geolocation' }) is no longer supported
         dispatch(actions.updateUser({ gps: false }));
-        alert(t('turn-on-permission'));
+        toast.error(t('turn-on-permission'));
       } else {
         dispatch(actions.updateUser({ gps: true }));
         if ('geolocation' in navigator) {
@@ -40,7 +41,7 @@ const useUserGPS = () => {
 
           geoId = navigator.geolocation.watchPosition(successHandler, errorHandler);
         } else {
-          alert(t('browser-not-support'));
+          toast.error(t('browser-not-support'));
         }
       }
     };

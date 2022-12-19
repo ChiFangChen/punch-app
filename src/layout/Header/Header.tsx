@@ -12,10 +12,14 @@ const Header = () => {
     t,
     i18n: { language, changeLanguage },
   } = useTranslation();
-  const isReady = useAppSelector((state) => state.config.isReady);
+  const { isReady, language: appLanguage } = useAppSelector((state) => ({
+    isReady: state.config.isReady,
+    language: state.config.data.app.language,
+  }));
 
   useEffect(() => {
-    if (isReady) dispatch(actions.saveLanguageAsync(language as types.Language));
+    if (isReady && appLanguage !== language)
+      dispatch(actions.saveLanguageAsync(language as types.Language));
   }, [language]);
 
   const nav = useMemo(() => {
