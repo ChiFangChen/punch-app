@@ -6,8 +6,6 @@ import Settings from '@/pages/Settings';
 import NoMatch from '@/pages/NoMatch';
 import { store } from '@/model';
 
-import './App.css';
-
 const App = () => (
   <Provider store={store}>
     <HashRouter>
