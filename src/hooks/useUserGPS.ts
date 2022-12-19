@@ -39,8 +39,6 @@ const useUserGPS = () => {
               // 3	TIMEOUT: do not get the position before timeout
             };
 
-            navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
-
             geoId = navigator.geolocation.watchPosition(successHandler, errorHandler);
           } else {
             alert(t('browser-not-support'));
