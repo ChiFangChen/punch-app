@@ -1,14 +1,20 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getTimeDetail } from '@/utils/time';
-import { Record } from '@/model/types';
+import { types } from '@/model';
 import { StyledRecordItem } from './styles';
 
-type ListItemProps = Record;
+type ListItemProps = types.Record;
 
 const ListItem = ({ timestamp, action, address }: ListItemProps) => {
-  const { t } = useTranslation();
-  const { date, displayTime, displayStatus } = getTimeDetail(timestamp);
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
+  const { date, displayTime, displayStatus } = getTimeDetail({
+    timestamp,
+    locale: language as types.Language,
+  });
   return (
     <StyledRecordItem>
       <div>

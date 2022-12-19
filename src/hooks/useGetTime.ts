@@ -1,33 +1,40 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getTimeDetail } from '@/utils/time';
-import { useAppSelector } from '@/model';
+import { useAppSelector, types } from '@/model';
 
-const getTimeObject = () => {
-  const { displayTime, displayStatus } = getTimeDetail();
-  return { displayTime, displayStatus };
+const getTimeObject = (locale: types.Language) => {
+  const { displayTime, displayStatus } = getTimeDetail({ locale });
+  return { displayTime, displayStatus, timeFormat: `${displayTime} ${displayStatus}` };
 };
 
 const useGetTime = () => {
-  const [timeObject, setTimeObject] = useState(getTimeObject());
+  const {
+    i18n: { language },
+  } = useTranslation() as {
+    i18n: { language: types.Language };
+  };
+  const getLocaleTimeObject = useCallback(() => getTimeObject(language), [language]);
+  const [timeObject, setTimeObject] = useState(getLocaleTimeObject());
   const historyCount = useAppSelector((state) => state.history.data.length);
-  const timeRef = useRef(timeObject.displayTime);
+  const timeFormatRef = useRef(timeObject.timeFormat);
 
   useEffect(() => {
-    timeRef.current = timeObject.displayTime;
-  }, [timeRef, timeObject]);
+    timeFormatRef.current = timeObject.timeFormat;
+  }, [timeFormatRef, timeObject]);
 
   useEffect(() => {
-    const now = getTimeObject();
-    if (now.displayTime !== timeRef.current) setTimeObject(getTimeObject());
+    const now = getLocaleTimeObject();
+    if (now.timeFormat !== timeFormatRef.current) setTimeObject(now);
 
     const timeInterval = setInterval(() => {
-      setTimeObject(getTimeObject());
+      setTimeObject(getLocaleTimeObject());
     }, 60000);
 
     return () => {
       clearInterval(timeInterval);
     };
-  }, [timeRef, historyCount]);
+  }, [historyCount, getLocaleTimeObject]);
 
   return timeObject;
 };

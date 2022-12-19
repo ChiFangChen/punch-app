@@ -4,7 +4,7 @@ import { useGetTime } from '@/hooks';
 import { StyledClock } from './styles';
 
 const Clock = () => {
-  const { displayTime, displayStatus } = useGetTime();
+  const { displayTime, displayStatus, timeFormat } = useGetTime();
 
   const memoClock = useMemo(
     () => (
@@ -32,7 +32,7 @@ const Clock = () => {
         </div>
       </StyledClock>
     ),
-    [displayTime, displayStatus]
+    [timeFormat]
   );
 
   return memoClock;
