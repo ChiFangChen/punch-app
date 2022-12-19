@@ -18,5 +18,14 @@
   "range-unit": "Range in KM",
   "km": "KM",
   "set-location": "Set office location",
-  "save": "SAVE"
+  "save": "SAVE",
+  "turn-on-permission": "Please turn on the permission of geolocation",
+  "browser-not-support": "The browser doesn't support GPS",
+  "range-limit": "Range should be between {{min}} and {{max}}",
+  "latitude-number": "Latitude should be number",
+  "latitude-limit": "Latitude should be between -90 and 90",
+  "longitude-number": "Longitude should be number",
+  "longitude-limit": "Longitude should be between -180 and 180",
+  "api-error": "API error",
+  "unexpected-error": "An unexpected error occurred"
 }

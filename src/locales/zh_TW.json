@@ -18,5 +18,14 @@
   "range-unit": "範圍公里內",
   "km": "公里",
   "set-location": "設定辦公室位置",
-  "save": "儲存"
+  "save": "儲存",
+  "turn-on-permission": "請開啟地理定位權限",
+  "browser-not-support": "此瀏覽器不支援定位功能",
+  "range-limit": "範圍必須介於 {{min}} 到 {{max}} 之間",
+  "latitude-number": "緯度必須為數字",
+  "latitude-limit": "緯度必須介於 -90 到 90 之間",
+  "longitude-number": "經度必須為數字",
+  "longitude-limit": "經度必須介於 -180 到 180 之間",
+  "api-error": "API 錯誤",
+  "unexpected-error": "發生未預期錯誤"
 }

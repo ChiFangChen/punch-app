@@ -33,25 +33,25 @@ const Settings = () => {
     };
 
     if (MIN_RANGE > res.range || res.range > MAX_RANGE) {
-      alert(`range should be between ${MIN_RANGE} and ${MAX_RANGE}`);
+      alert(t('range-limit', { min: MIN_RANGE, max: MAX_RANGE }));
       return;
     }
 
     if (Number.isNaN(res.latitude)) {
-      alert('latitude should be number');
+      alert(t('latitude-number'));
       return;
     }
     if (res.latitude < -90 || res.latitude > 90) {
-      alert('latitude should be between -90 and 90');
+      alert(t('latitude-limit'));
       return;
     }
 
     if (Number.isNaN(res.longitude)) {
-      alert('longitude should be number');
+      alert(t('longitude-number'));
       return;
     }
     if (res.longitude < -180 || res.longitude > 180) {
-      alert('longitude should be between -180 and 180');
+      alert(t('longitude-limit'));
       return;
     }
 

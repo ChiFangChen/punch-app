@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, actions } from '@/model';
 
 const useUserGPS = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -12,7 +14,7 @@ const useUserGPS = () => {
         if (permissionStatus.state === 'denied') {
           // navigator.permissions.revoke({ name: 'geolocation' }) is no longer supported
           dispatch(actions.updateUser({ gps: false }));
-          alert('Please turn on the permission of geolocation');
+          alert(t('turn-on-permission'));
         } else {
           dispatch(actions.updateUser({ gps: true }));
           if ('geolocation' in navigator) {
@@ -41,7 +43,7 @@ const useUserGPS = () => {
 
             geoId = navigator.geolocation.watchPosition(successHandler, errorHandler);
           } else {
-            alert("The browser doesn't support GPS");
+            alert(t('browser-not-support'));
           }
         }
       });
@@ -50,7 +52,7 @@ const useUserGPS = () => {
     return () => {
       if (geoId) navigator.geolocation.clearWatch(geoId);
     };
-  }, [dispatch]);
+  }, [dispatch, t]);
 };
 
 export default useUserGPS;

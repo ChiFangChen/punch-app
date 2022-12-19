@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from 'i18next';
 import { ACCESS_TOKEN } from '@/utils/constants';
 
 type GetAddress = (data: {
@@ -12,9 +13,13 @@ export const getAddress: GetAddress = async ({ latitude, longitude }) => {
     );
     if (result.status === 200 && result.statusText === 'OK') return result.data;
 
-    throw Error('API error');
+    throw Error(i18n.t('api-error') as string);
   } catch (error) {
-    alert('API error');
+    if (axios.isAxiosError(error) || error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert(i18n.t('unexpected-error'));
+    }
     throw Error();
   }
 };
