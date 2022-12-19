@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/punch-app/static/css/main.b8381d0c.css",
-    "main.js": "/punch-app/static/js/main.11eebab1.js",
+    "main.css": "/punch-app/static/css/main.89f0e8be.css",
+    "main.js": "/punch-app/static/js/main.e3f01634.js",
     "static/js/787.ac6586a7.chunk.js": "/punch-app/static/js/787.ac6586a7.chunk.js",
     "index.html": "/punch-app/index.html",
-    "main.b8381d0c.css.map": "/punch-app/static/css/main.b8381d0c.css.map",
-    "main.11eebab1.js.map": "/punch-app/static/js/main.11eebab1.js.map",
+    "main.89f0e8be.css.map": "/punch-app/static/css/main.89f0e8be.css.map",
+    "main.e3f01634.js.map": "/punch-app/static/js/main.e3f01634.js.map",
     "787.ac6586a7.chunk.js.map": "/punch-app/static/js/787.ac6586a7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b8381d0c.css",
-    "static/js/main.11eebab1.js"
+    "static/css/main.89f0e8be.css",
+    "static/js/main.e3f01634.js"
   ]
 }
