@@ -79,7 +79,7 @@ const Location = () => {
             font-weight: 600;
           `}
         >
-          {gps === undefined || distance === undefined ? <Loading size={24} /> : text}
+          {gps === undefined || (gps && distance === undefined) ? <Loading size={24} /> : text}
         </div>
       </StyledLocationContent>
     </StyledLocation>
