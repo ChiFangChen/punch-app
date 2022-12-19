@@ -3,6 +3,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './i18n';
 
+import 'react-local-toast/dist/bundle.min.css';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

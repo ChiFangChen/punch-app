@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { LocalToastProvider } from 'react-local-toast';
 import Layout from '@/layout';
 import Home from '@/pages/Home';
 import Settings from '@/pages/Settings';
@@ -8,16 +9,18 @@ import { store } from '@/model';
 
 const App = () => (
   <Provider store={store}>
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="home" element={<Home />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="*" element={<NoMatch />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <LocalToastProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="home" element={<Home />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="*" element={<NoMatch />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+    </LocalToastProvider>
   </Provider>
 );
 

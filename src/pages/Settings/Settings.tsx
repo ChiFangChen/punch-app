@@ -1,6 +1,12 @@
 import { useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
+import { useTranslation } from 'react-i18next';
+import {
+  LocalToastTarget,
+  useLocalToast,
+  DefaultToastData,
+  ToastPlacement,
+} from 'react-local-toast';
 import { Title, Label } from '@/components';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
 import { useAppDispatch, actions } from '@/model';
@@ -14,9 +20,18 @@ import { RangeInputProps } from './RangeInput/RangeInput';
 import RangeBarContainer from './RangeInput';
 import CoordinateInput from './CoordinateInput';
 
+const reactLocalToastOptions: {
+  type: DefaultToastData['type'];
+  placement: ToastPlacement;
+} = {
+  type: 'error',
+  placement: 'right',
+};
+
 const Settings = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const { showToast, removeAllToasts } = useLocalToast();
   const rangeRef = useRef(MIN_RANGE);
   const latitudeRef = useRef<HTMLInputElement>(null);
   const longitudeRef = useRef<HTMLInputElement>(null);
@@ -26,6 +41,8 @@ const Settings = () => {
   };
 
   const onSave = () => {
+    removeAllToasts();
+
     const res = {
       range: rangeRef.current,
       latitude: Number(latitudeRef.current?.value),
@@ -33,25 +50,33 @@ const Settings = () => {
     };
 
     if (MIN_RANGE > res.range || res.range > MAX_RANGE) {
-      alert(t('range-limit', { min: MIN_RANGE, max: MAX_RANGE }));
+      showToast(
+        'range',
+        t('range-limit', { min: MIN_RANGE, max: MAX_RANGE }),
+        reactLocalToastOptions
+      );
       return;
     }
 
     if (Number.isNaN(res.latitude)) {
-      alert(t('latitude-number'));
+      if (latitudeRef.current) latitudeRef.current.focus();
+      showToast('latitude', t('latitude-number'), reactLocalToastOptions);
       return;
     }
     if (res.latitude < -90 || res.latitude > 90) {
-      alert(t('latitude-limit'));
+      if (latitudeRef.current) latitudeRef.current.focus();
+      showToast('latitude', t('latitude-limit'), reactLocalToastOptions);
       return;
     }
 
     if (Number.isNaN(res.longitude)) {
-      alert(t('longitude-number'));
+      if (longitudeRef.current) longitudeRef.current.focus();
+      showToast('longitude', t('longitude-number'), reactLocalToastOptions);
       return;
     }
     if (res.longitude < -180 || res.longitude > 180) {
-      alert(t('longitude-limit'));
+      if (longitudeRef.current) longitudeRef.current.focus();
+      showToast('longitude', t('longitude-limit'));
       return;
     }
 
@@ -67,32 +92,34 @@ const Settings = () => {
           <StyledSettingBlockTitle>{t('set-range')}</StyledSettingBlockTitle>
           <StyledSettingItem>
             <Label htmlFor="range">{t('range-unit')}</Label>
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-              `}
-            >
-              <span
+            <LocalToastTarget name="longitude">
+              <div
                 css={css`
-                  color: #1b76e0;
-                  font-weight: bold;
+                  display: flex;
+                  align-items: center;
                 `}
               >
-                {MIN_RANGE}
-                {t('km')}
-              </span>
-              <RangeBarContainer onChange={onRangeChange} />
-              <span
-                css={css`
-                  color: #8cbaef;
-                  font-weight: bold;
-                `}
-              >
-                {MAX_RANGE}
-                {t('km')}
-              </span>
-            </div>
+                <span
+                  css={css`
+                    color: #1b76e0;
+                    font-weight: bold;
+                  `}
+                >
+                  {MIN_RANGE}
+                  {t('km')}
+                </span>
+                <RangeBarContainer onChange={onRangeChange} />
+                <span
+                  css={css`
+                    color: #8cbaef;
+                    font-weight: bold;
+                  `}
+                >
+                  {MAX_RANGE}
+                  {t('km')}
+                </span>
+              </div>
+            </LocalToastTarget>
           </StyledSettingItem>
         </StyledSettingBlock>
 
@@ -101,12 +128,16 @@ const Settings = () => {
 
           <StyledSettingItem>
             <Label htmlFor="latitude">{t('latitude')}</Label>
-            <CoordinateInput ref={latitudeRef} name="latitude" />
+            <LocalToastTarget name="latitude">
+              <CoordinateInput ref={latitudeRef} name="latitude" />
+            </LocalToastTarget>
           </StyledSettingItem>
 
           <StyledSettingItem>
             <Label htmlFor="longitude">{t('longitude')}</Label>
-            <CoordinateInput ref={longitudeRef} name="longitude" />
+            <LocalToastTarget name="longitude">
+              <CoordinateInput ref={longitudeRef} name="longitude" />
+            </LocalToastTarget>
           </StyledSettingItem>
         </StyledSettingBlock>
       </div>
