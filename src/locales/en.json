@@ -12,6 +12,7 @@
   "gps-disable-hint": "Please enable GPS",
   "far-from-office": "You are {{distance}} km away from office.",
   "position": "Current position",
+  "last-position": "Last position",
   "latitude": "Latitude",
   "longitude": "Longitude",
   "set-range": "Set clockIn range",

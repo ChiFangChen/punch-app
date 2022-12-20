@@ -23,6 +23,8 @@ const Location = () => {
     return t('gps-loading');
   }, [gps, language]);
 
+  const positionText = useMemo(() => (gps ? t('position') : t('last-position')), [gps]);
+
   const text = useMemo(() => {
     if (!gps) {
       return (
@@ -55,7 +57,7 @@ const Location = () => {
               font-weight: 500;
             `}
           >
-            {t('position')}
+            {positionText}
           </div>
           <div
             css={css`

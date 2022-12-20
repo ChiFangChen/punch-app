@@ -12,6 +12,7 @@
   "gps-disable-hint": "請開啟定位功能",
   "far-from-office": "距離辦公室還有 {{distance}} 公里",
   "position": "當前位置",
+  "last-position": "最後位置",
   "latitude": "緯度",
   "longitude": "經度",
   "set-range": "設定打卡範圍",
