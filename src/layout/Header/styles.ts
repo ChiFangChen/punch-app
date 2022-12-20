@@ -15,6 +15,7 @@ const StyledNavRight = styled('nav')`
 
   > select {
     margin-left: 12px;
+    height: 24.5px;
   }
 `;
 
