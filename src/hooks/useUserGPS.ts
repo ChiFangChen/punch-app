@@ -10,13 +10,15 @@ const useUserGPS = () => {
   useEffect(() => {
     let geoId: number | null = null;
 
-    const detectPermission = (permissionStatusState: string) => {
+    const detectPermission = (permissionStatusState: string, successToast?: boolean) => {
       if (permissionStatusState === 'denied') {
         // navigator.permissions.revoke({ name: 'geolocation' }) is no longer supported
         dispatch(actions.updateUser({ gps: false }));
         toast.error(t('turn-on-permission'));
       } else {
         dispatch(actions.updateUser({ gps: true }));
+        if (successToast) toast.success(t('gps-enable'));
+
         if ('geolocation' in navigator) {
           const successHandler = ({
             coords: { latitude, longitude },
@@ -54,7 +56,7 @@ const useUserGPS = () => {
             navigator.geolocation.clearWatch(geoId);
             geoId = null;
           }
-          detectPermission(permissionStatus.state);
+          detectPermission(permissionStatus.state, true);
         };
 
         detectPermission(permissionStatus.state);
