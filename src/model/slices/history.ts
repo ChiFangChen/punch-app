@@ -40,10 +40,12 @@ const appendHistoryAsync = createAsyncThunk<Record, { action: 'in' | 'out'; time
       latitude: user.coordinates[0],
       longitude: user.coordinates[1],
     });
+
     const data = {
       ...record,
       address: addressResult.features[0].place_name,
     };
+
     setLocalStorage(HISTORY, [data, ...history]);
 
     toast.success(i18n.t('clocked'));
@@ -58,15 +60,13 @@ export const historySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getHistory, (state, action) => ({
-        ...state,
-        isReady: true,
-        data: action.payload,
-      }))
-      .addCase(appendHistoryAsync.fulfilled, (state, action) => ({
-        ...state,
-        data: [action.payload, ...state.data],
-      }));
+      .addCase(getHistory, (draftState, { payload }) => {
+        draftState.isReady = true;
+        draftState.data = payload;
+      })
+      .addCase(appendHistoryAsync.fulfilled, (draftState, { payload }) => {
+        draftState.data = [payload, ...draftState.data];
+      });
   },
 });
 

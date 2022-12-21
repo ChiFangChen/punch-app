@@ -72,92 +72,81 @@ export const configSlice = createSlice({
   name: 'config',
   initialState,
   reducers: {
-    updateUser: (state, action) => {
-      const { latitude, longitude } = state.data.app;
+    updateUser: (draftState, { payload }) => {
+      const {
+        data: draftData,
+        data: {
+          app: draftApp,
+          app: { latitude, longitude },
+        },
+      } = draftState;
       let additional = {};
 
-      if (action.payload.coordinates) {
+      if (payload.coordinates) {
         const distance = getDistance(
           latitude,
           longitude,
-          action.payload.coordinates[0],
-          action.payload.coordinates[1]
+          payload.coordinates[0],
+          payload.coordinates[1]
         );
+
         additional = {
-          ...additional,
           distance,
-          inDistance: distance <= state.data.app.range,
+          inDistance: distance <= draftApp.range,
         };
       }
 
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          user: {
-            ...state.data.user,
-            ...action.payload,
-            ...additional,
-          },
-        },
+      draftData.user = {
+        ...draftData.user,
+        ...payload,
+        ...additional,
       };
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAppConfig, (state, action) => ({
-        ...state,
-        isReady: true,
-        data: {
-          ...state.data,
-          app: {
-            ...state.data.app,
-            ...action.payload,
-          },
-        },
-      }))
-      .addCase(saveAppConfig, (state, action) => {
+      .addCase(getAppConfig, (draftState, { payload }) => {
+        draftState.isReady = true;
+        const { data: draftData } = draftState;
+        draftData.app = {
+          ...draftData.app,
+          ...payload,
+        };
+      })
+      .addCase(saveAppConfig, (draftState, { payload }) => {
+        const {
+          data: { app: draftApp, user: draftUser },
+        } = draftState;
         let additional = {};
 
-        if (state.data.user.coordinates) {
+        if (draftUser.coordinates) {
           const distance = getDistance(
-            action.payload.latitude,
-            action.payload.longitude,
-            state.data.user.coordinates[0],
-            state.data.user.coordinates[1]
+            payload.latitude,
+            payload.longitude,
+            draftUser.coordinates[0],
+            draftUser.coordinates[1]
           );
           additional = {
             ...additional,
             distance,
-            inDistance: distance <= action.payload.range,
+            inDistance: distance <= payload.range,
           };
         }
 
-        return {
-          ...state,
-          data: {
-            ...state.data,
-            app: {
-              ...state.data.app,
-              ...action.payload,
-            },
-            user: {
-              ...state.data.user,
-              ...additional,
-            },
+        draftState.data = {
+          app: {
+            ...draftApp,
+            ...payload,
+          },
+          user: {
+            ...draftUser,
+            ...additional,
           },
         };
       })
-      .addCase(saveLanguage, (state, action) => ({
-        ...state,
-        data: {
-          ...state.data,
-          app: {
-            ...state.data.app,
-            language: action.payload.language,
-          },
-        },
-      }));
+      .addCase(saveLanguage, ({ data: { app: draftApp } }, { payload }) => {
+        draftApp.language = payload.language;
+      });
   },
 });
 
