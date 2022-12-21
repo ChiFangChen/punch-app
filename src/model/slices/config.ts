@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAction } from '@reduxjs/toolkit';
 import i18n from '@/i18n';
 import toast from 'react-hot-toast';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
@@ -39,7 +39,7 @@ const SAVE_APP_CONFIG = 'SAVE_APP_CONFIG';
 const SAVE_LANGUAGE = 'SAVE_LANGUAGE';
 
 // action creators
-const getAppConfigAsync = createAsyncThunk<App>(GET_APP_CONFIG, async () => {
+const getAppConfig = createAction(GET_APP_CONFIG, () => {
   const language =
     getLocalStorage(LANGUAGE) || ((getLanguage() || '').startsWith('zh') ? 'zh' : 'en');
   i18n.changeLanguage(language);
@@ -48,28 +48,25 @@ const getAppConfigAsync = createAsyncThunk<App>(GET_APP_CONFIG, async () => {
     DEFAULT_LATITUDE,
     DEFAULT_LONGITUDE,
   ];
-  return { language, range, latitude, longitude };
+  return { payload: { language, range, latitude, longitude } };
 });
 
-const saveAppConfigAsync = createAsyncThunk<App, App>(SAVE_APP_CONFIG, async (config) => {
-  setLocalStorage(RANGE, config.range);
-  setLocalStorage(COORDINATE, [config.latitude, config.longitude]);
+const saveAppConfig = createAction(SAVE_APP_CONFIG, (appConfig: App) => {
+  setLocalStorage(RANGE, appConfig.range);
+  setLocalStorage(COORDINATE, [appConfig.latitude, appConfig.longitude]);
 
   toast.success(i18n.t('saved'));
 
-  return config;
+  return { payload: appConfig };
 });
 
-const saveLanguageAsync = createAsyncThunk<{ language: Language }, Language>(
-  SAVE_LANGUAGE,
-  async (language) => {
-    setLocalStorage(LANGUAGE, language);
+const saveLanguage = createAction(SAVE_LANGUAGE, (language: Language) => {
+  setLocalStorage(LANGUAGE, language);
 
-    toast.success(i18n.t('saved'));
+  toast.success(i18n.t('saved'));
 
-    return { language };
-  }
-);
+  return { payload: { language } };
+});
 
 export const configSlice = createSlice({
   name: 'config',
@@ -108,7 +105,7 @@ export const configSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAppConfigAsync.fulfilled, (state, action) => ({
+      .addCase(getAppConfig, (state, action) => ({
         ...state,
         isReady: true,
         data: {
@@ -119,7 +116,7 @@ export const configSlice = createSlice({
           },
         },
       }))
-      .addCase(saveAppConfigAsync.fulfilled, (state, action) => {
+      .addCase(saveAppConfig, (state, action) => {
         let additional = {};
 
         if (state.data.user.coordinates) {
@@ -151,7 +148,7 @@ export const configSlice = createSlice({
           },
         };
       })
-      .addCase(saveLanguageAsync.fulfilled, (state, action) => ({
+      .addCase(saveLanguage, (state, action) => ({
         ...state,
         data: {
           ...state.data,
@@ -165,9 +162,9 @@ export const configSlice = createSlice({
 });
 
 export const actions = {
-  getAppConfigAsync,
-  saveAppConfigAsync,
-  saveLanguageAsync,
+  getAppConfig,
+  saveAppConfig,
+  saveLanguage,
   ...configSlice.actions,
 };
 

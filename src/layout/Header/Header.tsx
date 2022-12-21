@@ -19,7 +19,7 @@ const Header = () => {
 
   useEffect(() => {
     if (isReady && appLanguage !== language)
-      dispatch(actions.saveLanguageAsync(language as types.Language));
+      dispatch(actions.saveLanguage(language as types.Language));
   }, [language]);
 
   const nav = useMemo(() => {

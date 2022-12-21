@@ -80,7 +80,7 @@ const Settings = () => {
       return;
     }
 
-    dispatch(actions.saveAppConfigAsync(res));
+    dispatch(actions.saveAppConfig(res));
   };
 
   return (

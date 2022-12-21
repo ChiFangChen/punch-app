@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import i18n from '@/i18n';
 import toast from 'react-hot-toast';
 import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
@@ -16,9 +16,12 @@ const GET_HISTORY = 'GET_HISTORY';
 const APPEND_RECORD = 'APPEND_RECORD';
 
 // action creators
-const getHistoryAsync = createAsyncThunk<Record[]>(GET_HISTORY, async () => {
+const getHistory = createAction(GET_HISTORY, () => {
   const history = getLocalStorage(HISTORY) || [];
-  return history;
+
+  return {
+    payload: history,
+  };
 });
 
 const appendHistoryAsync = createAsyncThunk<Record, { action: 'in' | 'out'; timestamp: number }>(
@@ -55,7 +58,7 @@ export const historySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getHistoryAsync.fulfilled, (state, action) => ({
+      .addCase(getHistory, (state, action) => ({
         ...state,
         isReady: true,
         data: action.payload,
@@ -67,7 +70,7 @@ export const historySlice = createSlice({
   },
 });
 
-export const actions = { getHistoryAsync, appendHistoryAsync };
+export const actions = { getHistory, appendHistoryAsync };
 
 // reducer
 export default historySlice.reducer;
