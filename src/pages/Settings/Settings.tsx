@@ -24,19 +24,25 @@ import { RangeInputProps } from './RangeInput/RangeInput';
 import RangeBarContainer from './RangeInput';
 import CoordinateInput from './CoordinateInput';
 
-const validationSchema = (t: TFunction) =>
-  yup.object({
+const validationSchema = (t: TFunction) => {
+  const latitudeLimit = t('in-limit', { name: t('latitude'), min: -90, max: 90 });
+  const longitudeLimit = t('in-limit', { name: t('longitude'), min: -180, max: 180 });
+
+  return yup.object({
     latitude: yup
       .number()
-      .min(-90, t('latitude-limit') as string)
-      .max(90, t('latitude-limit') as string)
-      .required(t('latitude-number') as string),
+      .typeError(t('is-type', { name: t('latitude'), type: t('number') }) as string)
+      .min(-90, latitudeLimit)
+      .max(90, latitudeLimit)
+      .required(t('is-required', { name: t('latitude') }) as string),
     longitude: yup
       .number()
-      .min(-180, t('longitude-limit') as string)
-      .max(180, t('longitude-limit') as string)
-      .required(t('longitude-number') as string),
+      .typeError(t('is-type', { name: t('longitude'), type: t('number') }) as string)
+      .min(-180, longitudeLimit)
+      .max(180, longitudeLimit)
+      .required(t('is-required', { name: t('longitude') }) as string),
   });
+};
 
 const reactLocalToastOptions: {
   type: DefaultToastData['type'];
