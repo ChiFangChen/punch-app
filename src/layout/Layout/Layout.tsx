@@ -10,7 +10,7 @@ const Layout = () => {
   const isReady = useAppSelector((state) => state.config.isReady);
 
   useEffect(() => {
-    dispatch(actions.getAppConfig());
+    dispatch(actions.getAppConfigAsync());
     dispatch(actions.getHistory());
   }, [dispatch]);
 

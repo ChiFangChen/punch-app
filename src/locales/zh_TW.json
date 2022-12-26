@@ -26,7 +26,7 @@
   "is-type": "{{name}}必須為{{type}}",
   "number": "數字",
   "is-required": "{{name}}為必填",
-  "range-limit": "範圍必須介於 {{min}} 到 {{max}} 之間",
+  "range-error": "$t(in-limit, {\"name\": \"範圍\"})；範圍 {{value}} 已重置",
   "api-error": "API 錯誤",
   "unexpected-error": "發生未預期錯誤",
   "saved": "儲存成功",

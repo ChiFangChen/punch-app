@@ -1,7 +1,7 @@
-import { createSlice, createAction } from '@reduxjs/toolkit';
+import { createSlice, createAction, createAsyncThunk } from '@reduxjs/toolkit';
 import i18n from '@/i18n';
 import toast from 'react-hot-toast';
-import { getLocalStorage, setLocalStorage } from '@/utils/localStorage';
+import { getLocalStorage, setLocalStorage, removeLocalStorage } from '@/utils/localStorage';
 import {
   LANGUAGE,
   RANGE,
@@ -10,6 +10,7 @@ import {
   DEFAULT_LANGUAGE,
   DEFAULT_LATITUDE,
   DEFAULT_LONGITUDE,
+  MAX_RANGE,
 } from '@/utils/constants';
 import { Language, Config, App, State } from '@/model/types';
 import { getLanguage } from '@/utils/language';
@@ -39,16 +40,29 @@ const SAVE_APP_CONFIG = 'SAVE_APP_CONFIG';
 const SAVE_LANGUAGE = 'SAVE_LANGUAGE';
 
 // action creators
-const getAppConfig = createAction(GET_APP_CONFIG, () => {
+const getAppConfigAsync = createAsyncThunk(GET_APP_CONFIG, async () => {
   const language =
     getLocalStorage(LANGUAGE) || ((getLanguage() || '').startsWith('zh') ? 'zh' : 'en');
-  i18n.changeLanguage(language);
-  const range = getLocalStorage(RANGE) || MIN_RANGE;
+  const t = await i18n.changeLanguage(language);
+
+  let range = getLocalStorage(RANGE) || MIN_RANGE;
+  if (range > MAX_RANGE || range < MIN_RANGE) {
+    toast(
+      t('range-error', {
+        min: MIN_RANGE,
+        max: MAX_RANGE,
+        value: range,
+      })
+    );
+    removeLocalStorage(RANGE);
+    range = MIN_RANGE;
+  }
+
   const [latitude, longitude] = getLocalStorage(COORDINATE) || [
     DEFAULT_LATITUDE,
     DEFAULT_LONGITUDE,
   ];
-  return { payload: { language, range, latitude, longitude } };
+  return { language, range, latitude, longitude };
 });
 
 const saveAppConfig = createAction(SAVE_APP_CONFIG, (appConfig: App) => {
@@ -105,7 +119,7 @@ export const configSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAppConfig, (draftState, { payload }) => {
+      .addCase(getAppConfigAsync.fulfilled, (draftState, { payload }) => {
         draftState.isReady = true;
         const { data: draftData } = draftState;
         draftData.app = {
@@ -151,7 +165,7 @@ export const configSlice = createSlice({
 });
 
 export const actions = {
-  getAppConfig,
+  getAppConfigAsync,
   saveAppConfig,
   saveLanguage,
   ...configSlice.actions,

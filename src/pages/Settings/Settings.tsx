@@ -77,15 +77,6 @@ const Settings = () => {
       ...data,
     };
 
-    if (MIN_RANGE > res.range || res.range > MAX_RANGE) {
-      showToast(
-        'range',
-        t('range-limit', { min: MIN_RANGE, max: MAX_RANGE }),
-        reactLocalToastOptions
-      );
-      return;
-    }
-
     dispatch(actions.saveAppConfig(res));
   };
 

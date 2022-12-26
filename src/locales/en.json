@@ -26,7 +26,7 @@
   "is-type": "{{name}} should be {{type}}",
   "number": "number",
   "is-required": "{{name}} is required",
-  "range-limit": "Range should be between {{min}} and {{max}}",
+  "range-error": "$t(in-limit, {\"name\": \"Range\"}). Initialize the range from {{value}}",
   "api-error": "API error",
   "unexpected-error": "An unexpected error occurred",
   "saved": "Saved",
