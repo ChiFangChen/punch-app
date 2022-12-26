@@ -1,6 +1,10 @@
-import { useRef } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { css } from '@emotion/react';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   LocalToastTarget,
   useLocalToast,
@@ -9,7 +13,7 @@ import {
 } from 'react-local-toast';
 import { Title, Label } from '@/components';
 import { MIN_RANGE, MAX_RANGE } from '@/utils/constants';
-import { useAppDispatch, actions } from '@/model';
+import { useAppSelector, useAppDispatch, actions } from '@/model';
 import {
   StyledSettings,
   StyledSettingBlock,
@@ -20,6 +24,20 @@ import { RangeInputProps } from './RangeInput/RangeInput';
 import RangeBarContainer from './RangeInput';
 import CoordinateInput from './CoordinateInput';
 
+const validationSchema = (t: TFunction) =>
+  yup.object({
+    latitude: yup
+      .number()
+      .min(-90, t('latitude-limit') as string)
+      .max(90, t('latitude-limit') as string)
+      .required(t('latitude-number') as string),
+    longitude: yup
+      .number()
+      .min(-180, t('longitude-limit') as string)
+      .max(180, t('longitude-limit') as string)
+      .required(t('longitude-number') as string),
+  });
+
 const reactLocalToastOptions: {
   type: DefaultToastData['type'];
   placement: ToastPlacement;
@@ -29,24 +47,28 @@ const reactLocalToastOptions: {
 };
 
 const Settings = () => {
-  const { t } = useTranslation();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation();
   const dispatch = useAppDispatch();
   const { showToast, removeAllToasts } = useLocalToast();
   const rangeRef = useRef(MIN_RANGE);
-  const latitudeRef = useRef<HTMLInputElement>(null);
-  const longitudeRef = useRef<HTMLInputElement>(null);
+  const resolver = useMemo(() => yupResolver(validationSchema(t)), [language]);
+  const defaultValues = useAppSelector((state) => ({
+    latitude: state.config.data.app.latitude,
+    longitude: state.config.data.app.longitude,
+  }));
+  const { handleSubmit, register, formState } = useForm({ defaultValues, resolver });
 
   const onRangeChange: RangeInputProps['onChange'] = (data) => {
     rangeRef.current = data;
   };
 
-  const onSave = () => {
-    removeAllToasts();
-
+  const onSave = (data: any) => {
     const res = {
       range: rangeRef.current,
-      latitude: Number(latitudeRef.current?.value),
-      longitude: Number(longitudeRef.current?.value),
+      ...data,
     };
 
     if (MIN_RANGE > res.range || res.range > MAX_RANGE) {
@@ -58,113 +80,117 @@ const Settings = () => {
       return;
     }
 
-    if (Number.isNaN(res.latitude)) {
-      if (latitudeRef.current) latitudeRef.current.focus();
-      showToast('latitude', t('latitude-number'), reactLocalToastOptions);
-      return;
-    }
-    if (res.latitude < -90 || res.latitude > 90) {
-      if (latitudeRef.current) latitudeRef.current.focus();
-      showToast('latitude', t('latitude-limit'), reactLocalToastOptions);
-      return;
-    }
-
-    if (Number.isNaN(res.longitude)) {
-      if (longitudeRef.current) longitudeRef.current.focus();
-      showToast('longitude', t('longitude-number'), reactLocalToastOptions);
-      return;
-    }
-    if (res.longitude < -180 || res.longitude > 180) {
-      if (longitudeRef.current) longitudeRef.current.focus();
-      showToast('longitude', t('longitude-limit'));
-      return;
-    }
-
     dispatch(actions.saveAppConfig(res));
   };
+
+  // error handler
+  useEffect(() => {
+    removeAllToasts();
+
+    Object.keys(formState.errors).forEach((errorKey) => {
+      showToast(
+        errorKey,
+        formState.errors[errorKey as 'longitude' | 'latitude']?.message || '',
+        reactLocalToastOptions
+      );
+    });
+  }, [formState.errors]);
 
   return (
     <StyledSettings>
       <Title>{t('settings')}</Title>
 
-      <div>
-        <StyledSettingBlock>
-          <StyledSettingBlockTitle>{t('set-range')}</StyledSettingBlockTitle>
-          <StyledSettingItem>
-            <Label htmlFor="range">{t('range-unit')}</Label>
-            <LocalToastTarget name="longitude">
-              <div
-                css={css`
-                  display: flex;
-                  align-items: center;
-                `}
-              >
-                <span
+      <form onSubmit={handleSubmit(onSave)} noValidate>
+        <div>
+          <StyledSettingBlock>
+            <StyledSettingBlockTitle>{t('set-range')}</StyledSettingBlockTitle>
+            <StyledSettingItem>
+              <Label htmlFor="range">{t('range-unit')}</Label>
+              <LocalToastTarget name="longitude">
+                <div
                   css={css`
-                    color: #1b76e0;
-                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
                   `}
                 >
-                  {MIN_RANGE}
-                  {t('km')}
-                </span>
-                <RangeBarContainer onChange={onRangeChange} />
-                <span
-                  css={css`
-                    color: #8cbaef;
-                    font-weight: bold;
-                  `}
-                >
-                  {MAX_RANGE}
-                  {t('km')}
-                </span>
-              </div>
-            </LocalToastTarget>
-          </StyledSettingItem>
-        </StyledSettingBlock>
+                  <span
+                    css={css`
+                      color: #1b76e0;
+                      font-weight: bold;
+                    `}
+                  >
+                    {MIN_RANGE}
+                    {t('km')}
+                  </span>
+                  <RangeBarContainer onChange={onRangeChange} />
+                  <span
+                    css={css`
+                      color: #8cbaef;
+                      font-weight: bold;
+                    `}
+                  >
+                    {MAX_RANGE}
+                    {t('km')}
+                  </span>
+                </div>
+              </LocalToastTarget>
+            </StyledSettingItem>
+          </StyledSettingBlock>
 
-        <StyledSettingBlock>
-          <StyledSettingBlockTitle>{t('set-location')}</StyledSettingBlockTitle>
+          <StyledSettingBlock>
+            <StyledSettingBlockTitle>{t('set-location')}</StyledSettingBlockTitle>
 
-          <StyledSettingItem>
-            <Label htmlFor="latitude">{t('latitude')}</Label>
-            <LocalToastTarget name="latitude">
-              <CoordinateInput ref={latitudeRef} name="latitude" />
-            </LocalToastTarget>
-          </StyledSettingItem>
+            <StyledSettingItem>
+              <Label htmlFor="latitude">{t('latitude')}</Label>
+              <LocalToastTarget name="latitude">
+                <CoordinateInput
+                  min={-90}
+                  max={90}
+                  {...register('latitude', {
+                    valueAsNumber: true,
+                  })}
+                />
+              </LocalToastTarget>
+            </StyledSettingItem>
 
-          <StyledSettingItem>
-            <Label htmlFor="longitude">{t('longitude')}</Label>
-            <LocalToastTarget name="longitude">
-              <CoordinateInput ref={longitudeRef} name="longitude" />
-            </LocalToastTarget>
-          </StyledSettingItem>
-        </StyledSettingBlock>
-      </div>
+            <StyledSettingItem>
+              <Label htmlFor="longitude">{t('longitude')}</Label>
+              <LocalToastTarget name="longitude">
+                <CoordinateInput
+                  min={-180}
+                  max={180}
+                  {...register('longitude', {
+                    valueAsNumber: true,
+                  })}
+                />
+              </LocalToastTarget>
+            </StyledSettingItem>
+          </StyledSettingBlock>
+        </div>
 
-      <div
-        css={css`
-          text-align: center;
-        `}
-      >
-        <button
-          type="button"
+        <div
           css={css`
-            background: #4691c9;
-            border: 1px solid gray;
-            color: white;
-            border-radius: 100%;
-            height: 80px;
-            width: 80px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
+            text-align: center;
           `}
-          onClick={onSave}
         >
-          {t('save')}
-        </button>
-      </div>
+          <button
+            type="submit"
+            css={css`
+              background: #4691c9;
+              border: 1px solid gray;
+              color: white;
+              border-radius: 100%;
+              height: 80px;
+              width: 80px;
+              font-size: 20px;
+              font-weight: bold;
+              cursor: pointer;
+            `}
+          >
+            {t('save')}
+          </button>
+        </div>
+      </form>
     </StyledSettings>
   );
 };
